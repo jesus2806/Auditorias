@@ -20,7 +20,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/" replace />; // O a una página de acceso denegado
   }
 
-  return children; // Si el usuario tiene acceso, renderizamos el contenido
+  return children; // Si el usuario tiene acceso, renderiza el contenido
 };
 
 export default ProtectedRoute;

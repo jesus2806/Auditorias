@@ -63,6 +63,16 @@ import AccionesCorrectivasList from './Objetivos/Components/Tabla/AccionesCorrec
 import SaeftyGoals from './Objetivos/Components/Tabla/objetivoslistsaeftygoals.jsx'
 import Concentrado from './Objetivos/Components/Tabla/concentrado.jsx'
 
+//Paginas de error
+import UnauthorizedPage from './components/pag-error/UnauthorizedPage.jsx';
+import NotFoundPage from './components/pag-error/NotFoundPage.jsx';
+
+//Pie de pagina 
+import PiePagina from './components/pie-pag/PiePagina.jsx';
+
+//Pagina de inisio
+import { PaginaInicio } from './components/pag-inicio/pagina-inicio.jsx';
+
 // Cargar componentes según el rol correspondiente
 const Administrador = lazy(() => import('./administrador/Components/Home/inicio.jsx'));
 const Auditor = lazy(() => import('./auditor/components/Home/inicio.jsx'));
@@ -76,7 +86,7 @@ export const UserContext = createContext(null);
     const location = useLocation();
   
     // Rutas donde no queremos que se muestren MigasPan e IconMenu
-    const excludedRoutes = ['/','/correo-prog-audi'];
+    const excludedRoutes = ['/','/login'];
   
     return (
       <>
@@ -85,7 +95,7 @@ export const UserContext = createContext(null);
         {!excludedRoutes.includes(location.pathname) && <IconMenu />}
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-          <Route path="/" element={<Login />} /> 
+          <Route path="/login" element={<Login />} /> 
           <Route path="/correo-prog-audi" element={<ProgramarAuditoria/>}/>
               <Route path="/admin" element={<ProtectedRoute allowedRoles={['administrador']}><Administrador /></ProtectedRoute>} />
               <Route path="/auditor" element={<ProtectedRoute><Auditor /></ProtectedRoute>} />
@@ -150,6 +160,18 @@ export const UserContext = createContext(null);
               <Route path="/saefty-goals2" element={<SaeftyGoals />} />
               <Route path="/concentradon" element={<Concentrado />} />
 
+              {/*Paginas de error*/}
+              <Route path="/unauthorized" element={<UnauthorizedPage />} />
+
+              {/* Ruta comodín para rutas no encontradas */}
+              <Route path="*" element={<NotFoundPage />} />
+
+              {/*Pie de pagina*/}
+              <Route path='/pie' element={<PiePagina/>}/>
+
+              {/*Pagina de inicio*/}
+              <Route path='/' element={<PaginaInicio/>}/>
+
           </Routes>
         </Suspense>
       </>
@@ -194,6 +216,7 @@ function App() {
       <div className="App">
         <Router>
           <MainContent />
+          <PiePagina/>
         </Router>
       </div>
     </AuthProvider>

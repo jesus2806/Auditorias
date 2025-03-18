@@ -93,11 +93,11 @@ const Navbar = () => {
 
   const handleLogoClick = () => {
     // Redirige a diferentes rutas según el TipoUsuario
-    if (userData.TipoUsuario === 'auditado') {
+    if (userData?.TipoUsuario === 'auditado') {
       navigate('/auditado');
-    } else if (userData.TipoUsuario === 'auditor') {
+    } else if (userData?.TipoUsuario === 'auditor') {
       navigate('/auditor');
-    } else if (userData.TipoUsuario === 'administrador') {
+    } else if (userData?.TipoUsuario === 'administrador') {
       navigate('/admin');
     } else {
       navigate('/'); // Ruta por defecto si no coincide con ningún TipoUsuario
@@ -133,7 +133,7 @@ const Navbar = () => {
       style={{ cursor: 'pointer' }}/>
         <Divider sx={{backgroundColor:'#000000'}}/>
 
-        {userData.TipoUsuario === 'administrador' && (
+        {userData?.TipoUsuario === 'administrador' && (
           <>
         {/*Administrador*/}
         <br />
@@ -341,7 +341,7 @@ const Navbar = () => {
         </>
         )}
 
-      {['auditor', 'administrador'].includes(userData.TipoUsuario) && (
+      {['auditor', 'administrador'].includes(userData?.TipoUsuario) && (
           <>
         {/*Auditor*/}
         <br />
@@ -388,7 +388,7 @@ const Navbar = () => {
         </>
       )}
 
-      {['auditado', 'auditor', 'administrador'].includes(userData.TipoUsuario) && (
+      {['auditado', 'auditor', 'administrador'].includes(userData?.TipoUsuario) && (
           <>
 
         {/*Auditado*/}

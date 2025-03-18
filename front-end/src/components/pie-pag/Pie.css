@@ -1,0 +1,16 @@
+.content-pie, .content-pie html,.content-pie body {
+    min-height: 100hv;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-pie {
+    background-color: gray;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+    margin-top: 50vh;
+    position: relative;
+  }
+  

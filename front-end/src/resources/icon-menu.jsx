@@ -84,7 +84,7 @@ const IconMenu = () => {
         {/* ícono */}
 
         <div className="user-icon">
-         <span>{userData.Nombre}</span>
+         <span>{userData?.Nombre}</span>
           
           {/* Ícono */}
           <AccountCircleIcon
