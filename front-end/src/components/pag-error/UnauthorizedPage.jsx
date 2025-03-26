@@ -5,7 +5,7 @@ const UnauthorizedPage = () => (
   <div style={{ textAlign: 'center', marginTop: '50px' }}>
     <h1>Error 401 - No autorizado</h1>
     <p>No tienes acceso a esta página. Por favor, inicia sesión para continuar.</p>
-    <Link to="/">Ir a Iniciar Sesión</Link>
+    <Link to="/login">Ir a Iniciar Sesión</Link>
   </div>
 );
 

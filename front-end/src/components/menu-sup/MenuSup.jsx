@@ -3,10 +3,13 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/img/logoAudit.png';
-import './css/MenuSup.css'
+import './css/MenuSup.css';
 
 function MenuSup() {
+  const navigate = useNavigate();
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -15,9 +18,9 @@ function MenuSup() {
             <img src={logo} alt="Logo Empresa" className="logo-empresa-sup" />
           </div>
         </Typography>
-        <Button color="inherit">Inicio</Button>
-        <Button color="inherit">Servicios</Button>
-        <Button color="inherit">Contacto</Button>
+        <Button color="inherit" onClick={() => navigate('/')}>Inicio</Button>
+        <Button color="inherit" onClick={() => navigate('/servicios')}>Servicios</Button>
+        <Button color="inherit" onClick={() => navigate('/contacto')}>Contacto</Button>
       </Toolbar>
     </AppBar>
   );

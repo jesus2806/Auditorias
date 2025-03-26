@@ -69,9 +69,12 @@ import NotFoundPage from './components/pag-error/NotFoundPage.jsx';
 
 //Pie de pagina 
 import PiePagina from './components/pie-pag/PiePagina.jsx';
+import SiteMap from './components/pie-pag/siteMap.jsx';
 
-//Pagina de inisio
+//Pagina de inicio
 import { PaginaInicio } from './components/pag-inicio/pagina-inicio.jsx';
+import Servicios from './components/pag-inicio/servicios.jsx';
+import Contacto from './components/pag-inicio/contacto.jsx';
 
 // Cargar componentes según el rol correspondiente
 const Administrador = lazy(() => import('./administrador/Components/Home/inicio.jsx'));
@@ -86,7 +89,7 @@ export const UserContext = createContext(null);
     const location = useLocation();
   
     // Rutas donde no queremos que se muestren MigasPan e IconMenu
-    const excludedRoutes = ['/','/login'];
+    const excludedRoutes = ['/','/login','/servicios','/contacto'];
   
     return (
       <>
@@ -168,9 +171,12 @@ export const UserContext = createContext(null);
 
               {/*Pie de pagina*/}
               <Route path='/pie' element={<PiePagina/>}/>
+              <Route path='/map' element={<SiteMap/>}/>
 
               {/*Pagina de inicio*/}
               <Route path='/' element={<PaginaInicio/>}/>
+              <Route path='/servicios' element={<Servicios/>}/>
+              <Route path='/contacto' element={<Contacto/>}/>
 
           </Routes>
         </Suspense>

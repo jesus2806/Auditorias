@@ -12,12 +12,12 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   if (!userData) {
     // Si no hay datos de usuario (después de cargar), redirigir al login
-    return <Navigate to="/" replace />;
+    return <Navigate to="/unauthorized" replace />;
   }
 
   // Verificar si el rol del usuario está permitido
   if (allowedRoles && !allowedRoles.includes(userData.TipoUsuario)) {
-    return <Navigate to="/" replace />; // O a una página de acceso denegado
+    return <Navigate to="/unauthorized" replace />; // O a una página de acceso denegado
   }
 
   return children; // Si el usuario tiene acceso, renderiza el contenido
