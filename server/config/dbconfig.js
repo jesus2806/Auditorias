@@ -38,3 +38,4 @@ mongoose.connect(MONGODB_URL)
   .catch(err => console.error('Error al conectar a MongoDB:', err));
 
 module.exports = mongoose;
+
