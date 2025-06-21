@@ -1,11 +1,20 @@
 import React, { createContext, Suspense, lazy, useState, useEffect} from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation, matchPath} from "react-router-dom";
+import './api.js'
 import Login from './components/login/login.jsx';
 import AuthProvider from './AuthProvider';
 import ProtectedRoute from './ProtectedRoute';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { checkForUpdate } from './utils/checkForUpdate.js';
+//Scroll
+import ScrollToTop from './resources/ScrollToTop.jsx';
+import ScrollTopButton from './resources/ScrollTopButton.jsx';
+
+//reset Pass
+import ForgotPasswordForm from './components/resetPass/ForgotPasswordForm.jsx';
+import ResetPasswordForm from './components/resetPass/ResetPasswordForm.jsx';
+
 //componentes
 import MigasPan from './resources/migas-pan.jsx';
 import IconMenu from './resources/icon-menu.jsx';
@@ -54,14 +63,14 @@ import IshikawaVac from './ishikawa-vacio/components/Ishikawa/Ishikawa.jsx';
 import InicioIsh from './ishikawa-vacio/components/Home/inicio.jsx';
 
 //Objetivos 
-import Menu from './Objetivos/Components/Menu/elmenu.jsx';
-import Objetivos from './Objetivos/Components/Home/Inicio.jsx';
-import Tabla from './Objetivos/Components/Tabla/ObjetivosTabla.jsx'
-import Frecuencia from './Objetivos/Components/Tabla/frecuencia.jsx'
-import AccionesCorrectivas from './Objetivos/Components/Tabla/AccionesCorrectivas.jsx';
-import AccionesCorrectivasList from './Objetivos/Components/Tabla/AccionesCorrectivasList.jsx';
-import SaeftyGoals from './Objetivos/Components/Tabla/objetivoslistsaeftygoals.jsx'
-import Concentrado from './Objetivos/Components/Tabla/concentrado.jsx'
+import Menu from './objetivos/Components/Menu/elmenu.jsx';
+import Objetivos from './objetivos/Components/Home/Inicio.jsx';
+import Tabla from './objetivos/Components/Tabla/ObjetivosTabla.jsx'
+import Frecuencia from './objetivos/Components/Tabla/frecuencia.jsx'
+import AccionesCorrectivas from './objetivos/Components/Tabla/AccionesCorrectivas.jsx';
+import AccionesCorrectivasList from './objetivos/Components/Tabla/AccionesCorrectivasList.jsx';
+import SaeftyGoals from './objetivos/Components/Tabla/objetivoslistsaeftygoals.jsx'
+import Concentrado from './objetivos/Components/Tabla/concentrado.jsx'
 
 //Paginas de error
 import UnauthorizedPage from './components/pag-error/UnauthorizedPage.jsx';
@@ -75,27 +84,45 @@ import SiteMap from './components/pie-pag/siteMap.jsx';
 import { PaginaInicio } from './components/pag-inicio/pagina-inicio.jsx';
 import Servicios from './components/pag-inicio/servicios.jsx';
 import Contacto from './components/pag-inicio/contacto.jsx';
+import Registro from './components/login/Registro.jsx';
 
 // Cargar componentes según el rol correspondiente
 const Administrador = lazy(() => import('./administrador/Components/Home/inicio.jsx'));
 const Auditor = lazy(() => import('./auditor/components/Home/inicio.jsx'));
 const Auditado = lazy(() => import('./auditado/Components/Home/Inicio.jsx'));
 
-
-export const UserContext = createContext(null);
+export const UserContext = createContext({
+  userData: null,
+  setUserData: () => {},
+  loading: true,
+});
 
 
   const MainContent = () => {
     const location = useLocation();
   
-    // Rutas donde no queremos que se muestren MigasPan e IconMenu
-    const excludedRoutes = ['/','/login','/servicios','/contacto'];
+    const excludedRoutes = [
+      '/',
+      '/login',
+      '/servicios',
+      '/contacto',
+      '/unauthorized',
+      '/forgot-password',
+      '/reset-password/:id/:token',  // patrón, no literal
+      '/map',
+      '/registro'
+    ];
+  
+    // matchPath devolverá truthy si alguno de los patrones coincide
+    const isExcluded = excludedRoutes.some((pattern) =>
+      matchPath({ path: pattern, end: true }, location.pathname)
+    );
   
     return (
       <>
-        {!excludedRoutes.includes(location.pathname) && <Navbar />}
-        {!excludedRoutes.includes(location.pathname) && <MigasPan />}
-        {!excludedRoutes.includes(location.pathname) && <IconMenu />}
+        {!isExcluded && <Navbar />}
+        {!isExcluded && <MigasPan />}
+        {!isExcluded && <IconMenu />}
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
           <Route path="/login" element={<Login />} /> 
@@ -163,6 +190,10 @@ export const UserContext = createContext(null);
               <Route path="/saefty-goals2" element={<SaeftyGoals />} />
               <Route path="/concentradon" element={<Concentrado />} />
 
+              {/*reset*/}
+              <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+              <Route path="/reset-password/:id/:token" element={<ResetPasswordForm />} />
+
               {/*Paginas de error*/}
               <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
@@ -177,6 +208,7 @@ export const UserContext = createContext(null);
               <Route path='/' element={<PaginaInicio/>}/>
               <Route path='/servicios' element={<Servicios/>}/>
               <Route path='/contacto' element={<Contacto/>}/>
+              <Route path='/registro' element={<Registro/>}/>
 
           </Routes>
         </Suspense>
@@ -221,7 +253,9 @@ function App() {
     <ToastContainer />
       <div className="App">
         <Router>
+          <ScrollToTop/>
           <MainContent />
+          <ScrollTopButton/>
           <PiePagina/>
         </Router>
       </div>

@@ -1,70 +1,119 @@
-import React from 'react';
-import { Container, Box, Typography } from '@mui/material';
+import React, {useRef, useState, useEffect} from 'react';
+import { Tree, TreeNode } from 'react-organizational-chart';
+import IconMenu from '../../resources/icon-menu';
+import './Pie.css';
 
-// Definimos la estructura del mapa del sitio como un objeto
+// Datos del sitemap
 const sitemapData = {
-  name: "Audit",
+  name: 'Home',
+  link:'/',
   children: [
     {
-      name: "inicio de sesión",
+      name: 'inicio de sesión',
+      link: '/login',
       children: [
         {
-          name: "Inicio",
-          children: [
-            { name: "Administrador" },
-            { name: "auditor" },
-            { name: "Auditado" },
-            { name: "Ishikawas" },
-            { name: "Objetivos" }
-          ]
-        }
-      ]
+          name: 'Inicio',
+          link:'/admin',
+              children: [
+                {
+                  name: 'Auditorías',
+                  children: [
+                    { name: 'Generar Auditoría',link:'/datos' },
+                    { name: 'Revisión de Auditoría',link:'/ver-reali' },
+                    { name: 'Revisión de Ishikawa',link:'/revish' },
+                    { name: 'Auditorías Finalizadas',link:'/vistafin'},
+                  ],
+                },
+                { name: 'Ishikawa', children: [{ name: 'Ishikawas Generados',link:'/ishikawasesp' }] },
+                {
+                  name: 'Administración',
+                  children: [
+                    { name: 'Realizar Evaluación',link:'/evuaauditor' },
+                    { name: 'Ver Evaluaciones',link:'/vereva' },
+                    { name: 'Calendario de Auditorías',link:'/auditcalendar' },
+                  ],
+                },
+                {
+                  name: 'Gestion',
+                  children: [
+                    { name: 'Usuarios',link:'/usuariosRegistrados' },
+                    { name: 'Programas',link:'/programa' },
+                    { name: 'Departamento',link:'/departamento' },
+                  ],
+                },
+                {
+                  name: 'Carga y Graficas',
+                  children: [
+                    { name: 'Carga de Auditorías',link:'/carga' },
+                    { name: 'Estadísticas',link:'/estadisticas' },
+                  ],
+                },
+              ],
+            },
+           
+          ],
+        },
+      ],
+};
+
+const SitemapTree = ({ node }) => (
+  <TreeNode
+    label={
+      <div className="card">
+        {node.link ? (
+          <a href={node.link}>{node.name}</a>
+        ) : (
+          node.name
+        )}
+      </div>
     }
-  ]
-};
+  >
+    {node.children?.map((child, i) => (
+      <SitemapTree key={i} node={child} />
+    ))}
+  </TreeNode>
+);
 
-// Función recursiva para renderizar cada nodo del árbol
-const renderTree = (node) => {
-  return (
-    <Box 
-      sx={{ 
-        ml: 2, 
-        borderLeft: '2px solid #ccc', 
-        pl: 2, 
-        mt: 1,
-        '@media (max-width:600px)': { ml: 1, pl: 1 } // Ajuste responsivo
-      }}
-    >
-      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-        {node.name}
-      </Typography>
-      {node.children && node.children.map((child, index) => (
-        <Box key={index}>
-          {renderTree(child)}
-        </Box>
-      ))}
-    </Box>
-  );
-};
+export default function SiteMap() {
+  const containerRef = useRef(null);
+  const chartRef = useRef(null);
+  const [scale, setScale] = useState(1);
 
-function SiteMap() {
+  const calculateScale = () => {
+    const container = containerRef.current;
+    const chart = chartRef.current;
+    if (container && chart) {
+      const cW = container.offsetWidth;
+      const chW = chart.offsetWidth;
+      const newScale = cW / chW;
+      setScale(newScale < 1 ? newScale : 1);
+    }
+  };
+
+  useEffect(() => {
+    calculateScale();
+    window.addEventListener('resize', calculateScale);
+    return () => window.removeEventListener('resize', calculateScale);
+  }, []);
+
   return (
-    <Container 
-      sx={{ 
-        mt: 4, 
-        p: 3, 
-        backgroundColor: '#fff', 
-        borderRadius: '8px', 
-        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-        maxWidth: '800px'
-      }}
-    >
-      <Typography variant="h4" align="center" sx={{ mb: 3, color: '#2c3e50' }}>
-        Mapa del Sitio
-      </Typography>
-      {renderTree(sitemapData)}
-    </Container>
+    <>
+    <IconMenu/>
+    <div className="sitemap-container">
+      <h1 className="sitemap-title">Mapa Conceptual del Sitio</h1>
+      <div className="scroll-container" ref={containerRef}>
+        <div
+          className="chart-wrapper"
+          ref={chartRef}
+          style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }}
+        >
+          <Tree lineWidth="2px" lineColor="#ccc" lineBorderRadius="4px">
+            <SitemapTree node={sitemapData} />
+          </Tree>
+        </div>
+      </div>
+    </div>
+    </>
   );
 }
-
-export default SiteMap;

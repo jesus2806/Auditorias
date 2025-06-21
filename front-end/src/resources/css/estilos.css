@@ -1,43 +1,100 @@
-.superposicion{
-    z-index: 3;
-  }
-  
-  .user-icon {
-    display: inline-flex;
-    align-items: center; 
-    gap: 8px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    }
+.unique-superposicion {
+  z-index: 3;
+}
   
   .migas-pan {
     position: absolute;
-    top: 40px;
-    padding: 8px; 
+    top: 5em;
+    padding: 8px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    z-index: 1;
   }
   
   .migas-pan .MuiBreadcrumbs-root {
-    overflow: hidden; /* Ocultar contenido que se desborde */
-    text-overflow: ellipsis; /* Puntos suspensivos para texto largo */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .migas-pan .MuiChip-root {
-    max-width: 150px; /* Ancho máximo para cada chip */
-    overflow: hidden; /* Ocultar contenido que se desborde */
-    text-overflow: ellipsis; /* Puntos suspensivos */
-    white-space: nowrap; /* Prevenir el salto de línea */
+    max-width: 150px; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .unique-header {
+    background-color: rgb(0, 183, 255);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    position: relative;
+    flex-wrap: nowrap;
+    gap: 10px;
+    min-width: 0;
+    flex-shrink: 1;
+    z-index: 3;
   }
   
-  @media (max-width: 600px) {
-    .migas-pan .MuiChip-root {
-      font-size: 0.75rem; /* Reducir el tamaño del texto en pantallas pequeñas */
-      max-width: 100px; /* Limitar el ancho en dispositivos pequeños */
+  .unique-header-left {
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .unique-header-center {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  
+  .unique-header-center > * {
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .unique-header-right {
+    flex: 0 1 auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  @media (max-width: 800px) {
+    .unique-header {
+      flex-wrap: wrap;
+      justify-content: space-between;
+      height: auto;
     }
+  
+    .unique-header-left,
+    .unique-header-right {
+      order: 1;
+      flex: 0 1 auto;
+      display: flex;
+      align-items: center;
+    }
+  
+    .unique-header-center {
+      order: 2;
+      margin-top: 10px;
+    }
+  
+    .unique-header-center .busqueda-container {
+      width: 100%;
+      max-width: none;
+    }
+  
   }
   
-  
+@media (max-width: 600px) {
+  .migas-pan .MuiChip-root {
+    font-size: 0.75rem;
+    max-width: 100px;
+  }
+  .migas-pan {
+    top: 9em;
+  }
+}

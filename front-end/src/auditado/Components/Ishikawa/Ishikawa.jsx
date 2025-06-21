@@ -87,7 +87,7 @@ const Ishikawa = () => {
               descripcionEncontrada.Hallazgo : descripcionEncontrada.Observacion);
               setProblema((descripcionEncontrada?.Observacion && descripcionEncontrada?.PuntuacionMaxima) ?
                           descripcionEncontrada.Observacion : descripcionEncontrada.Problema);
-              setAuditados(descripcionEncontrada.Auditados);
+              setAuditados(descripcionEncontrada.userData.Nombre);
             }
           }
         }

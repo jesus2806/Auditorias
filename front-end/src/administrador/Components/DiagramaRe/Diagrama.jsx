@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api.js';
 import './css/Diagrama.css'
 import Logo from "../assets/img/logoAguida.png";
 import Ishikawa from '../assets/img/Ishikawa-transformed.webp';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../../../api.js';
 import * as XLSX from 'xlsx';
 import './css/Carga.css'; // Importa tu archivo CSS aquí
 import Swal from 'sweetalert2'; // Importa SweetAlert
@@ -228,7 +228,7 @@ const CargaMasiva = () => {
 
   return (
     <>
-      <div className="mass-upload-container">
+      <div className="mass-upload-container-carga">
         <h2 className="mass-upload-heading">Carga Masiva de Datos desde Excel</h2>
         <form className="mass-upload-form" onSubmit={handleSubmit}>
           <input className="mass-upload-input" type="file" onChange={handleFileChange} />

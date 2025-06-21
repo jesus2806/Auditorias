@@ -1,14 +1,14 @@
-.hallazgo-imagen {
-    width: 100%;
-    height: 100%; 
-    object-fit: cover;
+.hallazgo-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* espacio entre imágenes */
 }
 
-.datos-container-repo {
+.datos-container-repo-re {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 2rem auto 0;
+    margin: 7rem auto 0;
     width: 80rem;
     max-width: 100rem;
     padding: 20px;
@@ -17,7 +17,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.datos-container-repo th {
+.datos-container-repo-re th {
     background-color: #bdfdbd;
 }
 
@@ -73,16 +73,16 @@ th.conformity-header-repo {
 }
 
 .espacio-repo {
-    margin-top: 70px;
+    margin-top: 7em;
 }
 
 .logo-empresa-repo {
     position: absolute;
     height: auto;
-    width: 12em;
+    width: 7em;
     max-width: 12em;
     border-radius: 10px;
-    margin: 0 0 2px 0;
+    margin: 0 0 0 0;
 }
 
 .dato {
@@ -96,8 +96,15 @@ th.conformity-header-repo {
 }
 
 .mover {
+    display: flex;
+    justify-content: space-between;
     margin-top: -1%;
     margin-bottom: 1%;
+}
+
+.grupo-izquierda,
+.grupo-derecha {
+  width: 48%;
 }
 
 .horizontal-container {
@@ -245,4 +252,11 @@ table, th, td {
 
 .aviso{
     font-size: 30px;
+}
+
+@media (max-width: 768px) {
+    .datos-container-repo-re {
+        margin-bottom: -40rem;
+    }
+    
 }

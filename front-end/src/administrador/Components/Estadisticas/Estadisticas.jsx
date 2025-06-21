@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api.js';
 import { Bar, Pie } from 'react-chartjs-2';
 import 'chart.js/auto';
 import html2canvas from 'html2canvas';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api.js';
 import './css/AuditTable.css';
 import html2canvas from "html2canvas";
 import { Backdrop, CircularProgress, Typography, Snackbar, Alert } from "@mui/material";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
+import axios from '../../../api.js';
 import { UserContext } from '../../../App';
 import logo from "../assets/img/logoAguida.png";
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import './css/Final.css'
 import { useParams } from 'react-router-dom';
+import { Escalable } from '../../../components/escalable/Escalable.jsx';
 
 const Finalizada = () => {
     const { userData } = useContext(UserContext);
@@ -205,6 +206,7 @@ const Finalizada = () => {
     };
 
     return (
+        <Escalable baseWidth={1400}>
         <div className='espacio-repo'>
             {/*Mensaje de generacion*/}
             <div id="loading-overlay" style={{display:'none'}}>
@@ -256,11 +258,34 @@ const Finalizada = () => {
                                             <h1>REPORTE DE AUDITORÍA</h1>
                                             </div>
                                         </div>
-                                        <div className='mover'>
-                                            <div className="dato"><span className="bold-text">Duración de la auditoría:</span> {dato.Duracion}</div>
-                                            <div className="dato"><span className="bold-text">Tipo de auditoría:</span> {dato.TipoAuditoria}</div>
-                                            <div className="dato"><span className="bold-text">Fecha de elaboración de reporte:</span> {formatDate(dato.FechaElaboracion)}</div>
+                                        <div className="mover">
+                                        <div className={`grupo-izquierda ${!dato.Cliente ? 'sin-cliente' : ''}`}>
+                                        <div className="dato">
+                                            <span className="bold-text">Duración de la auditoría:</span> {dato.Duracion}
                                         </div>
+                                        <div className="dato">
+                                            <span className="bold-text">Tipo de auditoría:</span> {dato.TipoAuditoria}
+                                        </div>
+                                        {dato.Cliente && (
+                                            <div className="dato">
+                                                <span className="bold-text">Cliente:</span> {dato.Cliente}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                        <div className="grupo-derecha">
+                                        {dato.Cliente && (
+                                            <div className="dato-right">
+                                                <span className="bold-text">Fecha de evaluación de auditoría:</span> {formatDate(dato.FechaEvaluacion)}
+                                            </div>
+                                            )}
+                                            <div className="dato-right">
+                                                <span className="bold-text">Fecha de elaboración de reporte:</span> {formatDate(dato.FechaElaboracion)}
+                                            </div>
+                                        </div>
+
+
+                                            </div>
                                         <div className='tabla-reporte'>
                                         <table>
                                             <thead>
@@ -341,19 +366,21 @@ const Finalizada = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td style={{backgroundColor:'#bdfdbd', fontWeight: 'bold', width:'50%'}}>Programas</td>
-                                                        <td style={{backgroundColor:'#bdfdbd', fontWeight: 'bold'}}>Áreas auditadas</td>
+                                                <tr>
+                                                        <td style={{backgroundColor:'#bdfdbd', fontWeight: 'bold', width:'50%'}}>Documento de Referencia</td>
+                                                        <td style={{backgroundColor:'#bdfdbd', fontWeight: 'bold'}}>Alcance de Auditoría</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                            {dato.Programa.map((programa, programIdx) => (
-                                                                <div key={programIdx}>
-                                                                    {programa.Nombre}
-                                                                </div>
-                                                            ))}
-                                                        </td>
-                                                        <td>{dato.AreasAudi}</td>
+                                                    <td> 
+                                                        {dato.Referencia ? (
+                                                            <div>{dato.Referencia}</div>
+                                                        ) : (
+                                                            dato.Programa.map((programa, programIdx) => (
+                                                                <div key={programIdx}>{programa.Nombre}</div>
+                                                            ))
+                                                        )}
+                                                    </td>
+                                                        <td>{dato.Alcance? dato.Alcance: dato.AreasAudi}</td>
                                                     </tr>
                                                     <tr>
                                                         <td style={{backgroundColor:'#bdfdbd', fontWeight: 'bold'}}>Equipo auditor</td>
@@ -414,8 +441,7 @@ const Finalizada = () => {
                                                         {dato.Programa.map((programa, programIdx) =>
                                                             programa.Descripcion.map((desc, descIdx) => {
                                                                 const firePrefix = 'https://firebasestorage';
-                                                                const isFireImage = desc.Hallazgo.includes(firePrefix);
-
+                                                             
                                                                 if ((desc.Criterio !== 'NA' && desc.Criterio !== 'Conforme')) {
                                                                     const ishikawa = ishikawas.find(ish => {
                                                                         return ish.idReq === desc.ID && ish.idRep === dato._id;
@@ -443,19 +469,28 @@ const Finalizada = () => {
                                                                             )}
                                                                             {desc.Observacion}
                                                                             </td>
-                                                                            <td className='alingR' key={descIdx}>
-                                                                                {desc.Hallazgo ? (
-                                                                                    isFireImage ? (
-                                                                                        <img
-                                                                                            src={desc.Hallazgo}
-                                                                                            alt="Evidencia"
-                                                                                            className="hallazgo-imagen"
-                                                                                        />
+                                                                            <td className="alingR" key={descIdx}>
+                                                                            {Array.isArray(desc.Hallazgo) && desc.Hallazgo.length > 0 ? (
+                                                                                <div className="hallazgo-container">
+                                                                                {desc.Hallazgo.map((url, idx) => {
+                                                                                    const isFireImage = url.includes(firePrefix);
+                                                                                    return isFireImage ? (
+                                                                                    <img
+                                                                                        key={idx}
+                                                                                        src={url}
+                                                                                        alt={`Evidencia ${idx + 1}`}
+                                                                                        className="hallazgo-imagen"
+                                                                                    />
                                                                                     ) : (
-                                                                                        <span>{desc.Hallazgo}</span>
-                                                                                    )
-                                                                                ) : null}
+                                                                                    <span key={idx}>{url}</span>
+                                                                                    );
+                                                                                })}
+                                                                                </div>
+                                                                            ) : (
+                                                                                <span>No hay evidencia</span>
+                                                                            )}
                                                                             </td>
+
                                                                             <td>{ishikawa ? (ishikawa.actividades.length > 0 ? ishikawa.actividades[0].actividad : '') : ''}</td>
                                                                             <td>{ishikawa ? (ishikawa.actividades.length > 0 ? ishikawa.actividades[0].responsable : '') : ''}</td>
                                                                             <td>
@@ -491,6 +526,7 @@ const Finalizada = () => {
                 </div>
             </div>
         </div>
+        </Escalable>
     );    
 };
 

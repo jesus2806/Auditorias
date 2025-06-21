@@ -48,12 +48,12 @@ function Servicios() {
 
   const titleStyle = {
     fontSize: '2.5em',
-    color: '#2c3e50'
+    color: '#ffff'
   };
 
   const subtitleStyle = {
     fontSize: '1.2em',
-    color: '#34495e'
+    color: '#fff'
   };
 
   const cardStyle = {
@@ -70,26 +70,6 @@ function Servicios() {
 
   const beneficiosTitleStyle = {
     color: '#16a085',
-    marginTop: '10px'
-  };
-
-  const footerStyle = {
-    textAlign: 'center',
-    marginTop: '40px',
-    padding: '20px',
-    backgroundColor: '#fff',
-    borderRadius: '8px',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-  };
-
-  const btnStyle = {
-    padding: '10px 20px',
-    backgroundColor: '#27ae60',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    fontSize: '1em',
     marginTop: '10px'
   };
 
@@ -116,13 +96,6 @@ function Servicios() {
           </ul>
         </div>
       ))}
-
-      <footer style={footerStyle}>
-        <p style={{ fontSize: '1.1em', color: '#7f8c8d' }}>
-          ¡Empieza hoy y transforma la forma en que gestionas tus asesorías! Explora, configura y crece con nuestras herramientas.
-        </p>
-        <button style={btnStyle}>Conoce Más</button>
-      </footer>
     </div>
     </div>
   );

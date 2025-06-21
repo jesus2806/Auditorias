@@ -84,10 +84,10 @@ const Navbar = () => {
     if (
       event &&
       event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
+      (event.key !== 'Escape')
     ) {
       return;
-    }
+    }    
     setIsOpen(open);
   };
 
@@ -106,20 +106,19 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === 'Tab') {
-        event.preventDefault();  // Evita el cambio de foco
-        setIsOpen((prevIsOpen) => !prevIsOpen);  // Alterna el estado de isOpen
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setIsOpen((prevIsOpen) => !prevIsOpen);
       }
     };
-
-    // Agrega el evento al montar el componente
+  
     window.addEventListener('keydown', handleKeyDown);
-    
-    // Limpia el evento al desmontar el componente
+  
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+  
 
   const list = (
     <div

@@ -1,26 +1,17 @@
+// ProtectedRoute.jsx
 import React, { useContext } from 'react';
-import { Navigate } from 'react-router-dom';
 import { UserContext } from './App';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { userData, loading } = useContext(UserContext);
+  const { loading } = useContext(UserContext);
 
   if (loading) {
-    // Mientras AuthProvider sigue cargando, mostramos un indicador de carga o nada
-    return <div>Cargando...</div>;
+    // Puedes poner un spinner real aquí
+    return <div>Cargando sesión…</div>;
   }
 
-  if (!userData) {
-    // Si no hay datos de usuario (después de cargar), redirigir al login
-    return <Navigate to="/unauthorized" replace />;
-  }
 
-  // Verificar si el rol del usuario está permitido
-  if (allowedRoles && !allowedRoles.includes(userData.TipoUsuario)) {
-    return <Navigate to="/unauthorized" replace />; // O a una página de acceso denegado
-  }
-
-  return children; // Si el usuario tiene acceso, renderiza el contenido
+  return children;
 };
 
 export default ProtectedRoute;

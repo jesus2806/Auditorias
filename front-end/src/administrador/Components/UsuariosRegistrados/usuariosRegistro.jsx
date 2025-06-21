@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api.js';
 import './css/usuarios.css';
 import './css/editForm.css';
 import { format } from 'date-fns';

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../../../api.js';
 import './css/Ishikawa.css'
 import Logo from "../assets/img/logoAguida.png";
 import Ishikawa from '../assets/img/Ishikawa-transformed.webp';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { Escalable } from '../../../components/escalable/Escalable.jsx'; 
 
 const CreacionIshikawa = () => {
   const [isEditing] = useState(false);
@@ -170,6 +171,7 @@ const CreacionIshikawa = () => {
   };
 
   return (
+    <Escalable baseWidth={1400}>
     <div>
 
       <form onSubmit={(e) => {
@@ -444,6 +446,7 @@ const CreacionIshikawa = () => {
       </div>
     </form>
     </div>
+    </Escalable>
   );
 };
 

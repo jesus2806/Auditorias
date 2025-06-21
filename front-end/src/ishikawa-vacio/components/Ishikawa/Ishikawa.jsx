@@ -10,6 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../../App';
 import { Chip, TextField, Paper, List, ListItem } from '@mui/material';
+import { Escalable } from '../../../components/escalable/Escalable.jsx';
 
 const CreacionIshikawa = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -700,8 +701,6 @@ const handleDelete = (participantToDelete) => {
   return (
     <div>
 
-    <button className='button-pdf-imp' style={{top:'6em'}} onClick={handlePrintPDF}>Guardar en PDF</button>
-
       <form onSubmit={(e) => {
           e.preventDefault(); // Prevenir el envío automático del formulario
           if (isEditing) {
@@ -724,7 +723,7 @@ const handleDelete = (participantToDelete) => {
          </div>
     )}
       
-      <div style={{textAlign:'center'}}>
+      <div style={{textAlign:'center', marginTop:'7em'}}>
       <h2>Seleccionar un Registro de Ishikawa:</h2>
         <select className='selector-ish' onChange={handleSelectRecord} value={selectedRecordId || ''}>
           <option value="">Nuevo...</option>
@@ -741,6 +740,21 @@ const handleDelete = (participantToDelete) => {
              <div style={{padding:'15px'}}>{formData.notaRechazo}</div>
           </div>
          ): ''}
+
+<div
+          style={{
+            display: 'flex',            
+            justifyContent: 'center',   
+            alignItems: 'center',      
+            gap: '1rem' 
+          }}
+        >
+        <button type='submit'className='button-guardar-camb-ish'  onClick={(e) => {
+            e.preventDefault();handleSaveAdvance(); }}>Guardar Cambios</button>
+          <button type='submit'className='button-generar-ish'>Enviar</button>
+        </div>
+
+        <Escalable baseWidth={1400}>
 
         <div className="content-diagrama">
         <div id='pdf-content-part1' className="image-container-dia" >
@@ -966,14 +980,14 @@ const handleDelete = (participantToDelete) => {
             }} className='button-agregar'>Agregar Fila</button>
           </div>
           </div>
-          <button type='submit'className='button-guardar-camb-ish'  onClick={(e) => {
-            e.preventDefault();handleSaveAdvance(); }}>Guardar Cambios</button>
-          <button type='submit'className='button-generar-ish'>Enviar</button>
           
         </div>
+        </Escalable>
+        
       </div>
-    </form>
+     </form>
     </div>
+    
   );
 };
 

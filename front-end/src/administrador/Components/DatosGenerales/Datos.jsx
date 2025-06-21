@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../../api.js';
 import './css/Datos.css';
-import logo from "../assets/img/logoAguida.png";
 import Swal from 'sweetalert2';
-import Historial from './HistorialAuditorias';
 
 const Datos = () => {
   const [formData, setFormData] = useState({
@@ -500,9 +498,6 @@ const Datos = () => {
   return (
       <div className="contenedor-datos">
         <div className="centrado">
-        <div>
-          <Historial />
-        </div>
         <div className="navigation-buttons">
       {formStep !== 4 && (
         <>
@@ -707,10 +702,9 @@ const Datos = () => {
 </div>
 
 {formStep === 4 && (
-  <div className="datos-container2">
+  <div className="datos-container2-def">
     <form onSubmit={handleSubmit}>
       <div className="header-container-datos">
-        <img src={logo} alt="Logo Empresa" className="logo-empresa-ad" />
         <div className="button-group-datos">
           <button type="button" className="btn-registrar-datos" onClick={handlePrevious}>Regresar</button>
           <button type="submit" className="btn-registrar-datos">Generar</button>
@@ -719,6 +713,7 @@ const Datos = () => {
       <div className="form-group-datos">
         {formData.Programa.map((program, index) => (
           <div key={index}>
+            <div className="table-wrapper">
             <table key={index}>
               <thead>
                 <tr>
@@ -752,6 +747,7 @@ const Datos = () => {
                 ))}
               </tbody>
             </table>
+          </div>
           </div>
         ))}
       </div>

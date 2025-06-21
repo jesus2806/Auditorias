@@ -1,14 +1,14 @@
-.hallazgo-imagen {
-    width: 100%;
-    height: 100%; 
-    object-fit: cover;
+.hallazgo-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* espacio entre imágenes */
 }
 
 .datos-container-repo {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 2rem auto 0;
+    margin: 7rem auto 0;
     width: 80rem;
     max-width: 100rem;
     padding: 20px;
@@ -79,11 +79,12 @@ th.conformity-header-repo {
 }
 
 .logo-empresa-repo {
+    position: absolute;
     height: auto;
-    width: 14%;
-    max-width: 20%;
+    width: 7em;
+    max-width: 12em;
     border-radius: 10px;
-    margin: 0 0 20px 0;
+    margin: 0 0 0 0;
 }
 
 .dato {
@@ -154,3 +155,16 @@ th.conformity-header-repo {
     border-collapse: collapse;
     margin-bottom: 20px;
 }
+
+.escalado {
+    --ancho-base: 1120;
+    /* escala relativa al ancho base, puede ser >1 o <1 */
+    --scale: calc(100vw / var(--ancho-base));
+    transform-origin: top left;
+    transform: scale(var(--scale));
+    /* anchura real escalada para evitar recortes */
+    width: calc(var(--ancho-base) * var(--scale));
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  

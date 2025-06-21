@@ -319,3 +319,38 @@ th.conformity-header {
   flex: 1;
   min-width: 150px;
 }
+
+.datos-container2-def {
+  display: flex;
+  margin: 2rem auto 0;
+  width: 80%;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+
+
+@media (max-width: 920px) {
+
+  .table-wrapper {
+    width: 80vw;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .form-group-datos table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    table-layout: auto; 
+  }
+
+  .form-group-datos {
+    margin: 0;
+  }
+  
+  
+}

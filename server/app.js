@@ -16,6 +16,7 @@ const ishikawa = require('./routes/ishikawaRoutes');
 const evaluacionRoutes = require('./routes/evaluacionRoutes');
 const programarRoutes = require('./routes/programar-audiRoutes');
 const objetivosRoutes = require("./routes/ObjetivosRoutes");
+const authenticateJWT = require('./authenticateJWT');
 
 dotenv.config();
 
@@ -28,7 +29,7 @@ app.use(express.urlencoded({ limit: '100mb', extended: true }));
 const mongo = require('./config/dbconfig');
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://auditapp-dqej.onrender.com'],
+  origin: ['http://localhost:3000', 'https://auditapp-dqej.onrender.com', 'http://10.31.5.124:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, // Permitir cookies si son necesarias
@@ -49,16 +50,16 @@ app.use((req, res, next) => {
 });
 
 // Configura las rutas
-app.use('/usuarios', usuariosRouter);
 app.use('/', loginRoutes); 
-app.use('/datos', datosRoutes);
-app.use('/programas', programasRoutes);
-app.use('/areas', areasRoutes);
 app.use('/auth', authRoutes);
-app.use('/ishikawa', ishikawa);
-app.use('/evaluacion', evaluacionRoutes);
-app.use('/programas-anuales', programarRoutes);
-app.use('/api/objetivos', objetivosRoutes);
+app.use('/usuarios', usuariosRouter);
+app.use('/datos',              authenticateJWT, datosRoutes);
+app.use('/programas',          authenticateJWT, programasRoutes);
+app.use('/areas',              authenticateJWT, areasRoutes);
+app.use('/ishikawa',           authenticateJWT, ishikawa);
+app.use('/evaluacion',         authenticateJWT, evaluacionRoutes);
+app.use('/programas-anuales',  authenticateJWT, programarRoutes);
+app.use('/api/objetivos',      authenticateJWT, objetivosRoutes);
 
 // Manejar la ruta raíz
 app.get('/', (req, res) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Typography, TextField, Button, Box } from '@mui/material';
+import { Container,Paper, Typography, TextField, Button, Box } from '@mui/material';
 import MenuSup from '../menu-sup/MenuSup';
 
 function Contacto() {
@@ -7,6 +7,14 @@ function Contacto() {
     <div>
     <MenuSup/>
     <Container maxWidth="sm" style={{ marginTop: '40px' }}>
+    <Paper 
+          sx={{
+            p: 4,
+            width: '80%',
+            backgroundColor: 'white',
+          }}
+          elevation={3}
+        >
       <Typography variant="h4" gutterBottom>
         Contacto
       </Typography>
@@ -21,6 +29,7 @@ function Contacto() {
           fullWidth 
           margin="normal" 
         />
+        
         <TextField 
           label="Correo Electrónico" 
           variant="outlined" 
@@ -56,6 +65,7 @@ function Contacto() {
       <Typography variant="body1">
         <strong>Email:</strong> contacto@ejemplo.com
       </Typography>
+      </Paper>
     </Container>
     </div>
   );

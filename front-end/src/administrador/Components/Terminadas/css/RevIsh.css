@@ -67,3 +67,22 @@
     margin: 0 auto 20px auto; 
     display: block;
 }
+
+.divider {
+    flex-basis: 100%;
+    border-top: 2px solid black;
+    margin: 20px 0;
+    position: relative;
+    text-align: center;
+}
+
+.divider::after {
+    content: attr(data-label);
+    position: absolute;
+    top: -12px; 
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff;      
+    padding: 0 10px;
+    color: black;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState,useCallback,useContext } from 'react';
 import Logo from "../assets/img/logoAguida.png";
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../../api.js';
 import IshikawaImg from '../assets/img/Ishikawa-transformed.webp';
 import { UserContext } from '../../../App';
 import Swal from 'sweetalert2';
@@ -21,6 +21,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { Escalable } from '../../../components/escalable/Escalable.jsx'; 
 
 const IshikawaRev = () => {
     const { userData } = useContext(UserContext);
@@ -1048,7 +1049,9 @@ const ocultarCargando = () => {
                     )}
                     
                     </div>
+                    <Escalable baseWidth={1400}>
                     <button className='button-pdf-imp' onClick={handlePrintPDF}>Guardar en PDF</button>
+                    
                     <div id='pdf-content-part1' className="image-container">
                     <img src={Logo} alt="Logo Aguida" className='logo-empresa-ish' />
                     <h1 style={{position:'absolute', fontSize:'40px'}}>Ishikawa</h1>
@@ -1401,6 +1404,7 @@ const ocultarCargando = () => {
                     <Fotos open={modalOpen} onClose={() => setModalOpen(false)} onCapture={handleCapture} />
                     </div>
                     </div> 
+                    </Escalable>
                 </div>
                 ))}
             </div>

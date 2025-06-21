@@ -68,13 +68,6 @@ const Reporte = () => {
         );
     };
 
-    const contarCriteriosPorTipo = (criterios, tipo) => {
-        return Object.keys(criterios).filter(criterio => criterio === tipo).reduce((acc, criterio) => {
-            acc[criterio] = criterios[criterio];
-            return acc;
-        }, {});
-    };
-
     const checkboxValues = {
         'Conforme': 1,
         'm': 0.7,
@@ -102,6 +95,7 @@ const Reporte = () => {
     };
 
     return (
+        <div className='escalado'>
         <div className='espacio-repo'>
             <div className="datos-container-repo">
             <h1 style={{fontSize:'3rem', display:'flex' ,justifyContent:'center', marginTop:'0'}}>Reportes Generados</h1>
@@ -144,125 +138,90 @@ const Reporte = () => {
                                             <div className="dato"><span className="bold-text">Fecha de elaboración de reporte:</span> {formatDate(dato.FechaElaboracion)}</div>
                                         </div>
                                         <div className='tablas-reporte'>
+
+                                        
                                         <table>
                                             <thead>
                                                 <tr>
                                                     <th colSpan="1" className="conformity-header-repo">Puntos Obtenidos</th>
                                                 </tr>
                                             </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Conforme: {conteo.Conforme}</td>
+                                                    <td>NC Menor: {conteo.m}</td>
+                                                    <td>NC Mayor: {conteo.M}</td>
+                                                    <td>NC Crítica: {conteo.C}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Puntuación máxima: {total}</td>
+                                                    <td>Puntuación obtenida: {puntosObtenidos}</td>
+                                                    <td>Porcentaje: {dato.PorcentajeTotal}%</td>
+                                                    <td>Estatus: {dato.Estatus}</td>
+                                                </tr>
+                                                </tbody>
                                         
-                                        <div className="horizontal-container">
-                                            <div className="horizontal-group">
-                                                <div className="horizontal-item">
-                                                    <div className="horizontal-inline">
-                                                        <div>Conforme:</div>
-                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'Conforme')).map(criterio => (
-                                                            <div key={criterio} className="horizontal-inline-item">  {conteo[criterio]}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                                <div className="horizontal-item">
-                                                    <div className="horizontal-inline">
-                                                        <div>NC Menor:</div>
-                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'm')).map(criterio => (
-                                                            <div key={criterio} className="horizontal-inline-item"> {conteo[criterio]}</div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="horizontal-group">
-                                                <div className="horizontal-item">
-                                                    <div className="horizontal-inline"> 
-                                                        <div>NC Mayor:</div>
-                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'M')).map(criterio => (
-                                                            <div key={criterio} className="horizontal-inline-item"> {conteo[criterio]}
-                                                            </div>
-                                                        ))} 
-                                                    </div>
-                                                </div>
-                                                <div className="horizontal-item">
-                                                    <div className="horizontal-inline"> 
-                                                        <div>NC Crítica:</div>
-                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'C')).map(criterio => (
-                                                            <div key={criterio} className="horizontal-inline-item"> {conteo[criterio]}
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="horizontal-group">
-                                                <div className="horizontal-item">Puntuación máxima: {total}</div>
-                                                <div className="horizontal-item">Puntuación Obtenida: {puntosObtenidos}</div>
-                                            </div>
-                                            <div className="horizontal-group">
-                                                <div className="horizontal-item">Porcentaje: {dato.PorcentajeTotal}%</div>
-                                                <div className="horizontal-item">Estatus: {dato.Estatus}</div>
-                                            </div>
-                                        </div>
                                         </table>
                                         <table>
                                             <thead>
-                                                <tr>
-                                                    <th colSpan="1" className="conformity-header-repo">Objetivo</th>
-                                                </tr>
+                                            <tr>
+                                                <th className="conformity-header-repo">Objetivo</th>
+                                            </tr>
                                             </thead>
-                                            <div>Garantizar que el Sistema cumpla continuamente con los requisitos internacionales, lo que da como resultado una certificación que asegura el suministro de productos seguros a los consumidores en todo el mundo.</div>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                Garantizar que el Sistema cumpla continuamente con los requisitos internacionales, 
+                                                lo que da como resultado una certificación que asegura el suministro de productos 
+                                                seguros a los consumidores en todo el mundo.
+                                                </td>
+                                            </tr>
+                                            </tbody>
                                         </table>
                                         <table>
                                             <thead>
-                                                <tr>
-                                                    <th colSpan="2" className="conformity-header-repo">Alcance</th>
-                                                </tr>
-                                                <tr>
-                                                    <th className="table-header">Programas</th>
-                                                    <th className="table-header">Áreas auditadas</th>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        {dato.Programa.map((programa, programIdx) => (
-                                                            <div key={programIdx}>
-                                                                {programa.Nombre}
-                                                            </div>
-                                                        ))}
-                                                    </td>
-                                                    <td>
-                                                        {console.log(dato.AreasAudi)} {/* Esto te ayudará a ver la estructura del array en la consola */}
-                                                        {dato.AreasAudi.map((area, i) => (
-                                                            <div key={i}>
-                                                            {area}
-                                                            </div>
-                                                        ))}
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th className="table-header">Equipo auditor</th>
-                                                    <th className="table-header">Participantes en el área del recorrido</th>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div>Auditor líder: {dato.AuditorLider}</div>
-                                                        <div>
-                                                        {dato.EquipoAuditor.map((equipo, equipoIdx) => (
-                                                            <div key={equipoIdx}>
-                                                              Equipo auditor: {equipo.Nombre}
-                                                            </div>
-                                                        ))}</div>
-                                                        {dato.NombresObservadores && (
-                                                            <div>Observador(es): {dato.NombresObservadores}</div>
-                                                            )}
-                                                    </td>
-                                                    <td>
-                                                    <div>
-                                                        {dato.Auditados.map((audita, audIdx) => (
-                                                            <div key={audIdx}>
-                                                            {audita.Nombre}
-                                                            </div>
-                                                        ))}
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                            <tr>
+                                                <th colSpan="2" className="conformity-header-repo">Alcance</th>
+                                            </tr>
+                                            <tr>
+                                                <th className="table-header">Programas</th>
+                                                <th className="table-header">Áreas auditadas</th>
+                                            </tr>
                                             </thead>
+                                            <tbody>
+                                            <tr>
+                                                <td>
+                                                {dato.Programa.map((p, idx) => (
+                                                    <div key={idx}>{p.Nombre}</div>
+                                                ))}
+                                                </td>
+                                                <td>
+                                                {dato.AreasAudi.map((a, idx) => (
+                                                    <div key={idx}>{a}</div>
+                                                ))}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th className="table-header">Equipo auditor</th>
+                                                <th className="table-header">Participantes</th>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                <div>Auditor líder: {dato.AuditorLider}</div>
+                                                {dato.EquipoAuditor.map((e, i) => (
+                                                    <div key={i}>Equipo: {e.Nombre}</div>
+                                                ))}
+                                                {dato.NombresObservadores && (
+                                                    <div>Observador(es): {dato.NombresObservadores}</div>
+                                                )}
+                                                </td>
+                                                <td>
+                                                {dato.Auditados.map((au, i) => (
+                                                    <div key={i}>{au.Nombre}</div>
+                                                ))}
+                                                </td>
+                                            </tr>
+                                            </tbody>
                                         </table>
 
                                         <div>
@@ -288,7 +247,6 @@ const Reporte = () => {
                                                     {dato.Programa.map((programa, programIdx) => (
                                                         programa.Descripcion.map((desc, descIdx) => {
                                                             const firePrefix = 'https://firebasestorage';
-                                                             const isBase64Image = desc.Hallazgo.includes(firePrefix);
                                                             if (desc.Criterio !== 'NA' && desc.Criterio !== 'Conforme') {
                                                                 return (
                                                                     <tr key={descIdx}>
@@ -297,19 +255,27 @@ const Reporte = () => {
                                                                         <td className='alingR'>{desc.Requisito}</td>
                                                                         <td>{desc.Criterio}</td>
                                                                         <td>{desc.Observacion}</td>
-                                                                        <td key={descIdx}>
-                                                                            {desc.Hallazgo ? (
-                                                                                isBase64Image ? (
+                                                                        <td className="alingR" key={descIdx}>
+                                                                            {Array.isArray(desc.Hallazgo) && desc.Hallazgo.length > 0 ? (
+                                                                                <div className="hallazgo-container">
+                                                                                {desc.Hallazgo.map((url, idx) => {
+                                                                                    const isFireImage = url.includes(firePrefix);
+                                                                                    return isFireImage ? (
                                                                                     <img
-                                                                                        src={desc.Hallazgo}
-                                                                                        alt="Evidencia"
+                                                                                        key={idx}
+                                                                                        src={url}
+                                                                                        alt={`Evidencia ${idx + 1}`}
                                                                                         className="hallazgo-imagen"
                                                                                     />
-                                                                                ) : (
-                                                                                    <span>{desc.Hallazgo}</span>
-                                                                                )
-                                                                            ) : null}
-                                                                        </td>
+                                                                                    ) : (
+                                                                                    <span key={idx}>{url}</span>
+                                                                                    );
+                                                                                })}
+                                                                                </div>
+                                                                            ) : (
+                                                                                <span>No hay evidencia</span>
+                                                                            )}
+                                                                            </td>
                                                                         <td>{}</td>
                                                                         <td>{}</td>
                                                                         <td>{}</td>
@@ -332,6 +298,7 @@ const Reporte = () => {
                     })}
                 </div>
             </div>
+        </div>
         </div>
     );
 };

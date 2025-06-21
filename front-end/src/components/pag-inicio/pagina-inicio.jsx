@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import MenuSup from '../menu-sup/MenuSup';
+import BackgroundCarousel from './BackgroundCarousel';
 import './css/paginaInicio.css';
 
 export const PaginaInicio = () => {
@@ -9,6 +10,7 @@ export const PaginaInicio = () => {
 
   return (
     <div>
+      <BackgroundCarousel />
     <MenuSup/>
     
     <Box
@@ -19,7 +21,7 @@ export const PaginaInicio = () => {
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'center',
-        color: '#ffffff',
+        color: '#000',
         p: 3,
       }}
     >      
@@ -34,7 +36,7 @@ export const PaginaInicio = () => {
         <Button 
           variant="contained" 
           color="primary"
-          onClick={() => navigate('/generar-auditoria')}
+          onClick={() => navigate('/registro')}
         >
           Registrarte
         </Button>

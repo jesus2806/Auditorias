@@ -1,5 +1,5 @@
 import React, { useMemo,useEffect, useState, useContext } from 'react';
-import axios from 'axios';
+import axios from '../../../api.js';
 import { UserContext } from '../../../App';
 import logo from "../assets/img/logoAguida.png";
 import './css/Terminada.css'; 
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { Escalable } from '../../../components/escalable/Escalable.jsx';
 import { useParams } from 'react-router-dom';
 import { eliminarRegistro } from '../../../resources/eliminar-audi';
 
@@ -20,7 +21,7 @@ const Terminada = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    console.log(_id);
+    console.log(userData);
 
     useEffect(() => {
         const fetchDataAndObtainData = async () => {
@@ -288,9 +289,10 @@ const Terminada = () => {
     const navIshikawa = (_id, id, nombre) => {
         const nombreCodificado = encodeURIComponent(nombre);
         navigate(`/ishikawa/${_id}/${id}/${nombreCodificado}`);
-    };    
+    };   
 
     return (
+        <Escalable baseWidth={1400}>
         <div className='espacio-repo'>
              {/*Mensaje de generacion*/}
              <div id="loading-overlay" style={{display:'none'}}>
@@ -302,18 +304,18 @@ const Terminada = () => {
             {!loading && !error && (
             <div className="datos-container-repo">
             <h1 style={{fontSize:'3rem', display:'flex' ,justifyContent:'center', marginTop:'0'}}>Revisión de Ishikawa</h1>
-            {datos.length === 0?(
+            {datos?.length === 0?(
                 <div className='aviso'>No hay ishikawas por revisar... 🏜️</div>
               ):(
 
                 <div className="form-group-datos">
-                    {datos.map((dato, periodIdx) => {
+                    {datos?.map((dato, periodIdx) => {
                         let conteo = {};
                         let total = 0;
                         let totalNC = { menor: 0, mayor: 0, critica: 0 };
     
-                        dato.Programa.forEach(programa => {
-                            programa.Descripcion.forEach(desc => {
+                        dato.Programa?.forEach(programa => {
+                            programa.Descripcion?.forEach(desc => {
                                 if (desc.Criterio && desc.Criterio !== 'NA') {
                                     if (!conteo[desc.Criterio]) {
                                         conteo[desc.Criterio] = 0;
@@ -345,6 +347,7 @@ const Terminada = () => {
                         });
     
                         const porcentaje = (estadosRevisados > 0 && sumaNC > 0) ? (estadosRevisados * 100) / sumaNC : 0;
+                        
     
                         return (
                             <div key={periodIdx}>
@@ -372,11 +375,34 @@ const Terminada = () => {
                                             <h1>REPORTE DE AUDITORÍA</h1>
                                             </div>
                                         </div>
-                                        <div className='mover'>
-                                            <div className="dato"><span className="bold-text">Duración de la auditoría:</span> {dato.Duracion}</div>
-                                            <div className="dato"><span className="bold-text">Tipo de auditoría:</span> {dato.TipoAuditoria}</div>
-                                            <div className="dato"><span className="bold-text">Fecha de elaboración de reporte:</span> {formatDate(dato.FechaElaboracion)}</div>
+                                        <div className="mover">
+                                        <div className={`grupo-izquierda ${!dato.Cliente ? 'sin-cliente' : ''}`}>
+                                        <div className="dato">
+                                            <span className="bold-text">Duración de la auditoría:</span> {dato.Duracion}
                                         </div>
+                                        <div className="dato">
+                                            <span className="bold-text">Tipo de auditoría:</span> {dato.TipoAuditoria}
+                                        </div>
+                                        {dato.Cliente && (
+                                            <div className="dato">
+                                                <span className="bold-text">Cliente:</span> {dato.Cliente}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                        <div className="grupo-derecha">
+                                        {dato.Cliente && (
+                                            <div className="dato-right">
+                                                <span className="bold-text">Fecha de evaluación de auditoría:</span> {formatDate(dato.FechaEvaluacion)}
+                                            </div>
+                                            )}
+                                            <div className="dato-right">
+                                                <span className="bold-text">Fecha de elaboración de reporte:</span> {formatDate(dato.FechaElaboracion)}
+                                            </div>
+                                        </div>
+
+
+                                            </div>
                                         <div className='tabla-reporte'>
                                         <table>
                                             <thead>
@@ -391,7 +417,7 @@ const Terminada = () => {
                                                     <div className="horizontal-inline">
                                                         <div>Conforme:</div>
                                                         <div style={{marginLeft:'3px'}}>{dato.PuntuacionConf ?  dato.PuntuacionConf : ''}</div>
-                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'Conforme')).map(criterio => (
+                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'Conforme'))?.map(criterio => (
                                                             <div key={criterio} className="horizontal-inline-item">  {conteo[criterio]}
                                                             </div>
                                                         ))}
@@ -400,7 +426,7 @@ const Terminada = () => {
                                                 <div className="horizontal-item">
                                                     <div className="horizontal-inline">
                                                         <div>NC Menor:</div>
-                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'm')).map(criterio => (
+                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'm'))?.map(criterio => (
                                                             <div key={criterio} className="horizontal-inline-item"> {conteo[criterio]}</div>
                                                         ))}
                                                     </div>
@@ -410,7 +436,7 @@ const Terminada = () => {
                                                 <div className="horizontal-item">
                                                     <div className="horizontal-inline"> 
                                                         <div>NC Mayor:</div>
-                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'M')).map(criterio => (
+                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'M'))?.map(criterio => (
                                                             <div key={criterio} className="horizontal-inline-item"> {conteo[criterio]}
                                                             </div>
                                                         ))}
@@ -419,7 +445,7 @@ const Terminada = () => {
                                                 <div className="horizontal-item">
                                                     <div className="horizontal-inline"> 
                                                         <div>NC Crítica:</div>
-                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'C')).map(criterio => (
+                                                        {Object.keys(contarCriteriosPorTipo(conteo, 'C'))?.map(criterio => (
                                                             <div key={criterio} className="horizontal-inline-item"> {conteo[criterio]}
                                                             </div>
                                                         ))}
@@ -448,6 +474,7 @@ const Terminada = () => {
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                            
                                             <table>
                                                 <thead>
                                                     <tr>
@@ -456,18 +483,20 @@ const Terminada = () => {
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td style={{backgroundColor:'#bdfdbd', fontWeight: 'bold', width:'50%'}}>Programas</td>
-                                                        <td style={{backgroundColor:'#bdfdbd', fontWeight: 'bold'}}>Áreas auditadas</td>
+                                                        <td style={{backgroundColor:'#bdfdbd', fontWeight: 'bold', width:'50%'}}>Documento de Referencia</td>
+                                                        <td style={{backgroundColor:'#bdfdbd', fontWeight: 'bold'}}>Alcance de Auditoría</td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
-                                                            {dato.Programa.map((programa, programIdx) => (
-                                                                <div key={programIdx}>
-                                                                    {programa.Nombre}
-                                                                </div>
-                                                            ))}
-                                                        </td>
-                                                        <td>{dato.AreasAudi}</td>
+                                                    <td> 
+                                                        {dato.Referencia ? (
+                                                            <div>{dato.Referencia}</div>
+                                                        ) : (
+                                                            dato.Programa?.map((programa, programIdx) => (
+                                                                <div key={programIdx}>{programa.Nombre}</div>
+                                                            ))
+                                                        )}
+                                                    </td>
+                                                        <td>{dato.Alcance? dato.Alcance: dato.AreasAudi}</td>
                                                     </tr>
                                                     <tr>
                                                         <td style={{backgroundColor:'#bdfdbd', fontWeight: 'bold'}}>Equipo auditor</td>
@@ -477,7 +506,7 @@ const Terminada = () => {
                                                         <td>
                                                             <div>Auditor líder: {dato.AuditorLider}</div>
                                                             <div>
-                                                                {dato.EquipoAuditor.map((equipo, equipoIdx) => (
+                                                                {dato.EquipoAuditor?.map((equipo, equipoIdx) => (
                                                                     <div key={equipoIdx}>
                                                                         Equipo auditor: {equipo.Nombre}
                                                                     </div>
@@ -489,7 +518,7 @@ const Terminada = () => {
                                                         </td>
                                                         <td>
                                                         <div>
-                                                        {dato.Auditados.map((audita, audIdx) => (
+                                                        {dato.Auditados?.map((audita, audIdx) => (
                                                             <div key={audIdx}>
                                                             {audita.Nombre}
                                                             </div>
@@ -523,8 +552,8 @@ const Terminada = () => {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {dato.Programa.map((programa, programIdx) =>
-                                                            programa.Descripcion.map((desc, descIdx) => {
+                                                        {dato.Programa?.map((programa, programIdx) =>
+                                                            programa.Descripcion?.map((desc, descIdx) => {
                                                                 const firePrefix = 'https://firebasestorage';
                                                                                                                                
                                                                 // Evita renderizar filas no necesarias
@@ -549,34 +578,41 @@ const Terminada = () => {
                                                                             {desc.Observacion}
                                                                             </td>
                                                                             <td className="alingR" key={descIdx}>
-                                                                            {Array.isArray(desc.Hallazgo) && desc.Hallazgo.length > 0 ? (
-                                                                                desc.Hallazgo.map((url, idx) => {
+                                                                            { /* si desc.Hallazgo es undefined → desc.Hallazgo?.length es undefined → la condición es falsa */ }
+                                                                            {desc.Hallazgo?.length > 0 ? (
+                                                                                <div className="hallazgo-container">
+                                                                                {desc.Hallazgo?.map((url, idx) => {
                                                                                     const isFireImage = url.includes(firePrefix);
                                                                                     return isFireImage ? (
-                                                                                        <img
-                                                                                            key={idx}
-                                                                                            src={url}
-                                                                                            alt={`Evidencia ${idx + 1}`}
-                                                                                            className="hallazgo-imagen"
-                                                                                        />
+                                                                                    <img
+                                                                                        key={idx}
+                                                                                        src={url}
+                                                                                        alt={`Evidencia ${idx + 1}`}
+                                                                                        className="hallazgo-imagen"
+                                                                                    />
                                                                                     ) : (
-                                                                                        <span key={idx}>{url}</span>
+                                                                                    <span key={idx}>{url}</span>
                                                                                     );
-                                                                                })
+                                                                                })}
+                                                                                </div>
                                                                             ) : (
                                                                                 <span>No hay evidencia</span>
                                                                             )}
-                                                                        </td>
+                                                                            </td>
 
-                                                                            <td>{ishikawa ? (ishikawa.actividades.length > 0 ? ishikawa.actividades[0].actividad : '') : ''}</td>
+
+                                                                            <td>{ishikawa ? (ishikawa.actividades?.length > 0 ? ishikawa.actividades[0].actividad : '') : ''}</td>
                                                                             <td>
                                                                                 {ishikawa ? (
-                                                                                    ishikawa.actividades.length > 0 && ishikawa.actividades[0].fechaCompromiso.length > 0 ? 
+                                                                                    ishikawa.actividades?.length > 0 && ishikawa.actividades[0].fechaCompromiso.length > 0 ? 
                                                                                         ajustarFecha(ishikawa.actividades[0].fechaCompromiso.slice(-1)[0]) : 
                                                                                         ''
                                                                                 ) : ''}
                                                                             </td>
-                                                                            <td>{ishikawa ? (ishikawa.actividades.length > 0 ? ishikawa.actividades[0].responsable : '') : ''}</td>
+                                                                            <td>
+                                                                            {ishikawa?.actividades?.[0]?.responsable?.[0]?.nombre ?? ''}
+                                                                            </td>
+
                                                                             <td>
                                                                                 <button 
                                                                                     className='button-estado'
@@ -607,6 +643,7 @@ const Terminada = () => {
             </div>
             )}
         </div>
+        </Escalable>
     );    
 };
 

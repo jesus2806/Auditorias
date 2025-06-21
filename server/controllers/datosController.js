@@ -362,7 +362,7 @@ const obtenerDatosEspFinal = async (req, res) => {
 const obtenerDatosEspRealiz = async (req, res) => {
   try {
     // Selecciona solo los campos que deseas incluir en la respuesta
-    const datos = await Datos.find({ Estado: 'Realizada' },'_id AuditorLider FechaElaboracion TipoAuditoria Duracion Estado'); 
+    const datos = await Datos.find({ Estado: 'Realizado' },'_id AuditorLider FechaElaboracion TipoAuditoria Duracion Estado'); 
 
     res.status(200).json(datos);
   } catch (error) {

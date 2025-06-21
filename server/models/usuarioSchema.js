@@ -46,8 +46,14 @@ const UsuariosSchema = new mongoose.Schema({
       calificacion: { type: Number, required: true }
     }
   ],
-  Departamento: { type: String, required: false}, // Añadido
-  area: { type: String, required: true }, // Añadido para todo tipo de usuario
+  Departamento: { type: String, required: false},
+  area: { type: String},
+  Verificado: { type: Boolean, default: false },
+  codigoVerificacion: { type: String },
+  codigoVerificacionExpires: { type: Date },
+  // Campos para restablecimiento de contraseña
+  resetToken: { type: String },
+  resetTokenExpires: { type: Date },
 });
 
 // Hash de la contraseña antes de guardar
