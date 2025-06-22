@@ -7,14 +7,44 @@ import logo from '../../assets/img/logoAudit.png';
 import Swal from 'sweetalert2';
 import MenuSup from '../menu-sup/MenuSup';
 
+const PopUpProteccionDatos = ({ onClose }) => {
+  return (
+    <div className="modal-overlay enhanced-overlay">
+      <div className="modal-content enhanced-modal">
+        <div className="modal-icon">
+          <i className="fas fa-shield-alt"></i>
+        </div>
+        <h2 className="modal-title">Protección de Datos Personales</h2>
+        <p className="modal-text">
+          Tu privacidad y seguridad son muy importantes para nosotros. 
+          Los datos que proporcionas serán tratados conforme a la Ley de Protección de Datos Personales vigente, garantizando su confidencialidad y uso responsable.
+        </p>
+        <a 
+          href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LGPDPPSO.pdf" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="modal-link"
+        >
+          Consulta la Ley de Privacidad de Datos Oficial aquí
+        </a>
+        <div className="modal-button-container">
+          <button className="modal-button" onClick={onClose}>
+            Entendido
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 const Login = () => {
   const [formData, setFormData] = useState({ Correo: '', Contraseña: '' });
   const { setUserData } = useContext(UserContext);
-  const [mostrarVerificacion, setMostrarVerificacion] = useState(false);
-  const [codigoInputs, setCodigoInputs] = useState(Array(6).fill(''));
+  const [showPopup, setShowPopup] = useState(false);
+  const [nextRoute, setNextRoute] = useState('');
   const navigate = useNavigate();
 
-  // Para que axios incluya siempre la cookie
   useEffect(() => {
     axios.defaults.withCredentials = true;
   }, []);
@@ -35,86 +65,50 @@ const Login = () => {
 
   const ocultarCargando = () => Swal.close();
 
-  // Paso 1: solicitamos /login → retorna 403 y dispara envío de código
+  // Login sin código de verificación
   const handleSubmit = async (e) => {
     e.preventDefault();
     mostrarCargando('Verificando credenciales...');
     try {
-      await axios.post(
+      const { data } = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/login`,
         formData,
         { withCredentials: true }
       );
-      // No debería llegar aquí (esperamos 403)
-    } catch (error) {
+
       ocultarCargando();
-      if (error.response?.status === 403) {
-        setMostrarVerificacion(true);
-        Swal.fire({
-          icon: 'info',
-          title: 'Código enviado',
-          text: 'Revisa tu correo e ingresa el código.',
-        });
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Credenciales inválidas.',
-        });
-      }
-    }
-  };
 
-  // Paso 2: verificamos el código → /verificar setea la cookie + devuelve usuario
-  const handleSubmitCodigo = async (e) => {
-    e.preventDefault();
-    const codigo = codigoInputs.join('');
-    mostrarCargando('Verificando código...');
-    try {
-      const { data } = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/verificar`,
-        { Correo: formData.Correo, codigo },
-        { withCredentials: true }
-      );
-
-      // Ya no hay token en body; el servidor lo puso en cookie HttpOnly
       setUserData(data.usuario);
 
-      // Redirigir según rol
+      // Guardamos la ruta para redirigir después de mostrar el popup
       const tipo = data.usuario.TipoUsuario;
-      if (tipo === 'administrador') navigate('/admin');
-      else if (tipo === 'auditado')   navigate('/auditado');
-      else if (tipo === 'auditor')    navigate('/auditor');
+      if (tipo === 'administrador') setNextRoute('/admin');
+      else if (tipo === 'auditado') setNextRoute('/auditado');
+      else if (tipo === 'auditor') setNextRoute('/auditor');
       else {
         Swal.fire({
           icon: 'error',
           title: 'Error',
           text: 'Rol no permitido.',
         });
+        return;
       }
+
+      setShowPopup(true); // Mostrar el popup de protección de datos
+
     } catch (error) {
+      ocultarCargando();
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: error.response?.data?.error || 'Error al verificar el código.',
+        text: 'Credenciales inválidas.',
       });
-    } finally {
-      ocultarCargando();
-      setCodigoInputs(Array(6).fill(''));
-      setMostrarVerificacion(false);
     }
   };
 
-  const handleCodigoChange = (e, idx) => {
-    const { value } = e.target;
-    if (/^\d?$/.test(value)) {
-      const inputs = [...codigoInputs];
-      inputs[idx] = value;
-      setCodigoInputs(inputs);
-      if (value && idx < inputs.length - 1) {
-        document.getElementById(`codigo-${idx + 1}`)?.focus();
-      }
-    }
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    navigate(nextRoute);
   };
 
   return (
@@ -176,33 +170,7 @@ const Login = () => {
           </div>
         </div>
 
-        {mostrarVerificacion && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h2>Verificar Código</h2>
-              <p>Ingresa el código de verificación:</p>
-              <div className="codigo-container">
-                {codigoInputs.map((val, idx) => (
-                  <input
-                    key={idx}
-                    id={`codigo-${idx}`}
-                    type="text"
-                    maxLength="1"
-                    value={val}
-                    onChange={(e) => handleCodigoChange(e, idx)}
-                    className="input-code"
-                  />
-                ))}
-              </div>
-              <button
-                className="btn-verify"
-                onClick={handleSubmitCodigo}
-              >
-                Verificar Código
-              </button>
-            </div>
-          </div>
-        )}
+        {showPopup && <PopUpProteccionDatos onClose={handleClosePopup} />}
       </div>
     </div>
   );
