@@ -20,7 +20,7 @@ const PopUpProteccionDatos = ({ onClose }) => {
           Los datos que proporcionas serán tratados conforme a la Ley de Protección de Datos Personales vigente, garantizando su confidencialidad y uso responsable.
         </p>
         <a 
-          href="https://www.diputados.gob.mx/LeyesBiblio/pdf/LGPDPPSO.pdf" 
+          href="https://drive.google.com/file/d/1szmsC3ouLoSbamZZF8ExRto0Q8dKkwR2/view?usp=sharing" 
           target="_blank" 
           rel="noopener noreferrer"
           className="modal-link"
