@@ -63,14 +63,14 @@ import IshikawaVac from './ishikawa-vacio/components/Ishikawa/Ishikawa.jsx';
 import InicioIsh from './ishikawa-vacio/components/Home/inicio.jsx';
 
 //Objetivos 
-import Menu from './objetivos/Components/Menu/elmenu.jsx';
-import Objetivos from './objetivos/Components/Home/Inicio.jsx';
-import Tabla from './objetivos/Components/Tabla/ObjetivosTabla.jsx'
-import Frecuencia from './objetivos/Components/Tabla/frecuencia.jsx'
-import AccionesCorrectivas from './objetivos/Components/Tabla/AccionesCorrectivas.jsx';
-import AccionesCorrectivasList from './objetivos/Components/Tabla/AccionesCorrectivasList.jsx';
-import SaeftyGoals from './objetivos/Components/Tabla/objetivoslistsaeftygoals.jsx'
-import Concentrado from './objetivos/Components/Tabla/concentrado.jsx'
+import Menu from './Objetivos/Components/Menu/elmenu.jsx';
+import Objetivos from './Objetivos/Components/Home/Inicio.jsx';
+import Tabla from './Objetivos/Components/Tabla/ObjetivosTabla.jsx'
+import Frecuencia from './Objetivos/Components/Tabla/frecuencia.jsx'
+import AccionesCorrectivas from './Objetivos/Components/Tabla/AccionesCorrectivas.jsx';
+import AccionesCorrectivasList from './Objetivos/Components/Tabla/AccionesCorrectivasList.jsx';
+import SaeftyGoals from './Objetivos/Components/Tabla/objetivoslistsaeftygoals.jsx'
+import Concentrado from './Objetivos/Components/Tabla/concentrado.jsx'
 
 //Paginas de error
 import UnauthorizedPage from './components/pag-error/UnauthorizedPage.jsx';
