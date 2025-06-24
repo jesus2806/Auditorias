@@ -25,7 +25,7 @@ const PopUpProteccionDatos = ({ onClose }) => {
           rel="noopener noreferrer"
           className="modal-link"
         >
-          Consulta la Ley de Privacidad de Datos Oficial aquí
+          Consulta Nuestra Ley de Privacidad de Datos aquí
         </a>
         <div className="modal-button-container">
           <button className="modal-button" onClick={onClose}>
