@@ -5,6 +5,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const createError = require('http-errors');
 const dotenv = require('dotenv');
+require('./tasks/cronDeleteInactive');
 
 const usuariosRouter = require('./routes/usuarioRoutes');
 const loginRoutes = require('./routes/loginRoutes');
@@ -29,7 +30,7 @@ app.use(express.urlencoded({ limit: '100mb', extended: true }));
 const mongo = require('./config/dbconfig');
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://auditapp-dqej.onrender.com', 'http://10.31.5.124:3000'],
+  origin: ['http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, // Permitir cookies si son necesarias
@@ -63,7 +64,7 @@ app.use('/api/objetivos',      authenticateJWT, objetivosRoutes);
 
 // Manejar la ruta raíz
 app.get('/', (req, res) => {
-  res.send('Bienvenido a la API de Aguida');
+  res.send('Bienvenido a la API de Audit');
 });
 
 // Catch 404 and forward to error handler
