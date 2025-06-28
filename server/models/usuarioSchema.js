@@ -54,6 +54,7 @@ const UsuariosSchema = new mongoose.Schema({
   // Campos para restablecimiento de contraseña
   resetToken: { type: String },
   resetTokenExpires: { type: Date },
+  lastActivity: { type: Date, default: Date.now }
 });
 
 // Hash de la contraseña antes de guardar

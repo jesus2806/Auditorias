@@ -15,6 +15,9 @@ const iniciarSesion = async (req, res) => {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
+    usuario.lastActivity = Date.now();
+    await usuario.save();
+
     // Generar token JWT directamente sin código de verificación
     const payload = { userId: usuario._id };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
