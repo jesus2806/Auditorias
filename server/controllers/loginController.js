@@ -1,3 +1,5 @@
+//loginController
+
 const Usuarios = require('../models/usuarioSchema');
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
@@ -15,6 +17,9 @@ const iniciarSesion = async (req, res) => {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
+    usuario.lastActivity = Date.now();
+    await usuario.save();
+
     // Generar token JWT directamente sin código de verificación
     const payload = { userId: usuario._id };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
@@ -28,6 +33,7 @@ const iniciarSesion = async (req, res) => {
     });
 
     const usuarioRes = {
+      ID: usuario._id,
       Correo: usuario.Correo,
       Nombre: usuario.Nombre,
       TipoUsuario: usuario.TipoUsuario,

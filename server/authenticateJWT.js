@@ -1,15 +1,14 @@
-// middlewares/authenticateJWT.js
 const jwt      = require('jsonwebtoken');
 const Usuarios = require('./models/usuarioSchema');
 require('dotenv').config();
 
 async function authenticateJWT(req, res, next) {
-  const authHeader = req.headers.authorization;        // “Bearer eyJ…”
-  if (!authHeader) {
+  const token = req.cookies?.token
+              || (req.headers.authorization?.split(' ')[1]);
+  if (!token) {
     return res.status(401).json({ error: 'Token requerido' });
   }
-
-  const token = authHeader.split(' ')[1];
+  
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     // Opcional: puedes cargar más datos de usuario si los necesitas
@@ -19,11 +18,11 @@ async function authenticateJWT(req, res, next) {
     }
     // adjunta info al req
     req.user = {
-      id:       usuario._id,
-      rol:      usuario.TipoUsuario,
-      correo:   usuario.Correo,
-      nombre:   usuario.Nombre,
-      area:     usuario.area
+      ID: usuario._id,
+      Correo: usuario.Correo,
+      Nombre: usuario.Nombre,
+      TipoUsuario: usuario.TipoUsuario,
+      Area: usuario.area,
     };
     next();
   } catch (err) {

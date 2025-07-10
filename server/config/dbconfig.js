@@ -20,7 +20,7 @@ mongoose.connection.on('connected', async () => {
         Puesto: 'Global',
         Departamento: 'Calidad',
         Escolaridad: 'TSU',
-        TipoUsuario: 'administrador',
+        TipoUsuario: 'Administrador',
         area: 'general'
       });
 

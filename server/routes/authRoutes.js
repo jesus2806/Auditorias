@@ -33,7 +33,7 @@ router.get('/verifyToken', authenticateJWT, async (req, res) => {
       ID:usuario.id
     });
   } catch (err) {
-    // El token no es válido o hubo otro error
+    console.log("Error en el catch")
     return res.status(401).json({ error: 'Token inválido' });
   }
 });
