@@ -3,6 +3,8 @@ const transporter = require('../emailconfig');
 const bcrypt = require('bcryptjs');
 const axios = require('axios');
 const crypto = require('crypto');
+const logger = require('../util/logger'); // <- Importación del logger
+console.log("Logger methods:", Object.keys(logger));
 
 // Controlador para registrar un nuevo usuario
 const registroUsuario = async (req, res) => {
@@ -10,7 +12,8 @@ const registroUsuario = async (req, res) => {
     const nuevoUsuario = new Usuarios(req.body);
     await nuevoUsuario.save();
 
-    // Enviar correo electrónico si el nuevo usuario es un auditor
+    logger.info(`Nuevo usuario registrado: ${nuevoUsuario.Nombre} (${nuevoUsuario.Correo}) - Rol: ${nuevoUsuario.TipoUsuario}`);
+
     if (nuevoUsuario.TipoUsuario === 'auditor') {
       const mailOptions = {
         from: process.env.EMAIL_USERNAME,
@@ -21,57 +24,56 @@ const registroUsuario = async (req, res) => {
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          console.error('Error al enviar el correo electrónico:', error);
+          logger.error(`Error al enviar correo a ${nuevoUsuario.Correo}: ${error.message}`);
         } else {
-          console.log('Correo electrónico enviado:', info.response);
+          logger.info(`Correo de bienvenida enviado a ${nuevoUsuario.Correo}`);
         }
       });
     }
 
     res.status(201).json({ message: 'Usuario registrado exitosamente' });
   } catch (error) {
-    console.error('Error al registrar el usuario:', error);
+    logger.error(`Error en registroUsuario: ${error.message}`);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-
-// Controlador para obtener todos los usuarios
 const obtenerUsuarios = async (req, res) => {
   try {
     const usuarios = await Usuarios.find();
     res.json(usuarios);
   } catch (error) {
-    console.error('Error al obtener los usuarios:', error);
+    logger.error(`Error en obtenerUsuarios: ${error.message}`);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-// Controlador para obtener un usuario por su ID
 const obtenerUsuarioPorId = async (req, res) => {
   try {
     const usuario = await Usuarios.findById(req.params.id);
     if (!usuario) {
+      logger.warn(`Usuario no encontrado con ID: ${req.params.id}`);
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
     res.json(usuario);
   } catch (error) {
-    console.error('Error al obtener el usuario por ID:', error);
+    logger.error(`Error en obtenerUsuarioPorId: ${error.message}`);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-// Controlador para actualizar un usuario por su ID
 const actualizarUsuario = async (req, res) => {
   try {
     const updates = req.body;
-    // Convertir FormaParteEquipoInocuidad a booleano
+
     if (updates.FormaParteEquipoInocuidad !== undefined) {
       updates.FormaParteEquipoInocuidad = updates.FormaParteEquipoInocuidad === 'on' || updates.FormaParteEquipoInocuidad === true;
     }
+
     if (updates.PromedioEvaluacion !== undefined) {
       updates.Aprobado = updates.PromedioEvaluacion >= 80;
     }
+
     if (updates.calificaciones) {
       updates.calificaciones = updates.calificaciones.map(calificacion => ({
         nombreCurso: calificacion.nombreCurso,
@@ -80,41 +82,46 @@ const actualizarUsuario = async (req, res) => {
     }
 
     const usuario = await Usuarios.findByIdAndUpdate(req.params.id, updates, { new: true });
+
     if (!usuario) {
+      logger.warn(`Usuario no encontrado para actualizar con ID: ${req.params.id}`);
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
+
+    logger.info(`Usuario actualizado: ${usuario.Nombre} (${usuario.Correo})`);
     res.json(usuario);
   } catch (error) {
-    console.error('Error al actualizar el usuario:', error);
+    logger.error(`Error en actualizarUsuario: ${error.message}`);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-// Controlador para obtener un usuario por su nombre
 const obtenerUsuarioPorNombre = async (req, res) => {
   try {
     const nombreUsuario = req.params.nombre;
     const usuario = await Usuarios.findOne({ Nombre: nombreUsuario });
     if (!usuario) {
+      logger.warn(`Usuario no encontrado por nombre: ${nombreUsuario}`);
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
     res.json(usuario);
   } catch (error) {
-    console.error('Error al obtener el usuario por nombre:', error);
+    logger.error(`Error en obtenerUsuarioPorNombre: ${error.message}`);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-// Controlador para eliminar un usuario por su ID
 const eliminarUsuario = async (req, res) => {
   try {
     const usuario = await Usuarios.findByIdAndDelete(req.params.id);
     if (!usuario) {
+      logger.warn(`Intento de eliminación fallido. Usuario con ID ${req.params.id} no encontrado`);
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
+    logger.info(`Usuario eliminado: ${usuario.Nombre} (${usuario.Correo})`);
     res.json({ message: 'Usuario eliminado correctamente' });
   } catch (error) {
-    console.error('Error al eliminar el usuario:', error);
+    logger.error(`Error en eliminarUsuario: ${error.message}`);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
@@ -122,16 +129,18 @@ const eliminarUsuario = async (req, res) => {
 const cambiarPassword = async (req, res) => {
   try {
     const { password } = req.body;
-    console.log('Aquiii', req.body)
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const usuario = await Usuarios.findByIdAndUpdate(req.params.id, { Contraseña: hashedPassword }, { new: true });
     if (!usuario) {
+      logger.warn(`Usuario no encontrado para cambio de contraseña: ID ${req.params.id}`);
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
+
+    logger.info(`Contraseña actualizada para usuario: ${usuario.Nombre} (${usuario.Correo})`);
     res.json({ message: 'Contraseña actualizada exitosamente' });
   } catch (error) {
-    console.error('Error al actualizar la contraseña:', error);
+    logger.error(`Error en cambiarPassword: ${error.message}`);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
@@ -139,40 +148,35 @@ const cambiarPassword = async (req, res) => {
 const searchUsuarios = async (req, res) => {
   try {
     const { search } = req.query;
-    // Se valida que el término de búsqueda tenga al menos 3 caracteres
+
     if (!search || search.trim().length < 3) {
       return res.status(400).json({ error: 'Ingrese al menos 3 caracteres para buscar' });
     }
-    
-    // Se crea una expresión regular para realizar una búsqueda insensible a mayúsculas/minúsculas
+
     const regex = new RegExp(search, 'i');
     const usuarios = await Usuarios.find({ Nombre: regex }).limit(10);
-    
     res.json(usuarios);
   } catch (error) {
-    console.error('Error al buscar usuarios:', error);
+    logger.error(`Error en searchUsuarios: ${error.message}`);
     res.status(500).json({ error: 'Error en la búsqueda de usuarios' });
   }
 };
 
 const registroAdministrador = async (req, res) => {
   try {
-    // 1. Extraer y validar el token del captcha
     const captchaToken = req.body.captchaToken;
     if (!captchaToken) {
       return res.status(400).json({ error: 'Por favor, completa el captcha.' });
     }
-    
-    // 2. Verificar el captcha con Google (de prueba)
+
     const secretKey = process.env.RECAPTCHA_SECRET_KEY || '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
     const verificationURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaToken}`;
-    
+
     const captchaResponse = await axios.post(verificationURL);
     if (!captchaResponse.data.success) {
       return res.status(400).json({ error: 'La verificación del captcha falló.' });
     }
-    
-    // 3. Continuar con el registro del administrador
+
     const datosAdmin = {
       ...req.body,
       TipoUsuario: 'administrador',
@@ -182,7 +186,8 @@ const registroAdministrador = async (req, res) => {
     const nuevoAdministrador = new Usuarios(datosAdmin);
     await nuevoAdministrador.save();
 
-    // Enviar correo electrónico de bienvenida al administrador
+    logger.info(`Administrador registrado: ${nuevoAdministrador.Nombre} (${nuevoAdministrador.Correo})`);
+
     const mailOptions = {
       from: process.env.EMAIL_USERNAME,
       to: nuevoAdministrador.Correo,
@@ -192,19 +197,18 @@ const registroAdministrador = async (req, res) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error('Error al enviar el correo electrónico:', error);
+        logger.error(`Error al enviar correo al administrador: ${error.message}`);
       } else {
-        console.log('Correo electrónico enviado:', info.response);
+        logger.info(`Correo de bienvenida enviado a ${nuevoAdministrador.Correo}`);
       }
     });
 
     res.status(201).json({ message: 'Administrador registrado exitosamente' });
   } catch (error) {
-    // Si el error es por clave duplicada (correo ya registrado)
     if (error.code === 11000 && error.keyPattern && error.keyPattern.Correo) {
       return res.status(400).json({ error: 'El correo ya existe. Por favor, utilice otro correo.' });
     }
-    console.error('Error al registrar el administrador:', error);
+    logger.error(`Error en registroAdministrador: ${error.message}`);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
@@ -212,29 +216,23 @@ const registroAdministrador = async (req, res) => {
 const solicitarResetPassword = async (req, res) => {
   try {
     const { email } = req.body;
-
-    // Mensaje genérico para no revelar si el usuario existe o no
     const mensajeGenerico = 'Si ese correo existe en nuestro sistema, recibirás un enlace para restablecer tu contraseña.';
 
     const usuario = await Usuarios.findOne({ Correo: email });
     if (!usuario) {
-      // Responde con mensaje genérico
+      logger.warn(`Solicitud de restablecimiento con correo no registrado: ${email}`);
       return res.status(200).json({ message: mensajeGenerico });
     }
 
-    // Genera token aleatorio y fecha de expiración (1 hora)
     const token = crypto.randomBytes(16).toString('hex');
-    const expiration = Date.now() + 3600000; // 1 hora en milisegundos
+    const expiration = Date.now() + 3600000;
 
-    // Guarda el token y su expiración en el documento del usuario
     usuario.resetToken = token;
     usuario.resetTokenExpires = expiration;
     await usuario.save();
 
-    // Genera la URL de restablecimiento. Puedes enviarla con parámetros
     const resetUrl = `http://10.31.5.124:3000/reset-password/${usuario._id}/${token}`;
 
-    // Define el contenido del correo
     const mailOptions = {
       from: '"Audit" <no-reply@tudominio.com>',
       to: usuario.Correo,
@@ -247,49 +245,47 @@ const solicitarResetPassword = async (req, res) => {
       `
     };
 
-    // Envía el correo
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error('Error al enviar el correo de restablecimiento:', error);
+        logger.error(`Error al enviar correo de reset a ${usuario.Correo}: ${error.message}`);
       } else {
-        console.log('Correo de restablecimiento enviado:', info.messageId);
+        logger.info(`Correo de restablecimiento enviado a ${usuario.Correo}`);
       }
     });
 
     return res.status(200).json({ message: mensajeGenerico });
   } catch (error) {
-    console.error('Error en solicitarResetPassword:', error);
+    logger.error(`Error en solicitarResetPassword: ${error.message}`);
     return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
 const restablecerPassword = async (req, res) => {
   try {
-    const { id, token } = req.params; // Se espera que la URL sea: /reset-password/:id/:token
+    const { id, token } = req.params;
     const { newPassword } = req.body;
 
     const usuario = await Usuarios.findById(id);
     if (!usuario) {
+      logger.warn(`Intento de restablecer contraseña de usuario no existente: ID ${id}`);
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    // Verificar que el token coincida y que no haya expirado
     if (usuario.resetToken !== token || Date.now() > usuario.resetTokenExpires) {
+      logger.warn(`Token inválido o expirado para usuario: ${usuario.Correo}`);
       return res.status(400).json({ error: 'Token inválido o expirado' });
     }
 
-    console.log('nueva contra: ', newPassword)
-
     usuario.Contraseña = newPassword;
-
-    // Limpia los campos del token para que no se puedan reusar
     usuario.resetToken = undefined;
     usuario.resetTokenExpires = undefined;
 
     await usuario.save();
+
+    logger.info(`Contraseña restablecida exitosamente para usuario: ${usuario.Correo}`);
     return res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
   } catch (error) {
-    console.error('Error en restablecerPassword:', error);
+    logger.error(`Error en restablecerPassword: ${error.message}`);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
