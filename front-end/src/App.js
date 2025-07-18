@@ -30,9 +30,6 @@ import Revicion from './administrador/Components/Reviciones/Revicion';
 import Terminada from './administrador/Components/Terminadas/Terminada';
 import Ishikawa from './administrador/Components/Ishikawa/Ishikawa';
 import IshikawaRev from './administrador/Components/IshikawaRev/IshikawaRev';
-import Finalizada from './administrador/Components/Finalizada/Finalizada';
-import Calendarioss from './administrador/Components/Calendarios/AuditCalendar'
-import Calendarios from './administrador/Components/Calendarios/CalendarioGeneral'
 import Departaments from './administrador/Components/Departaments/Departaments';
 import Diagrama from './administrador/Components/DiagramaRe/Diagrama';
 import CargaMasiva from './administrador/Components/DatosGenerales/CargaMasiva';
@@ -55,11 +52,8 @@ import ReporteAuditado from './auditado/Components/ReporteF/ReporteF';
 import IshikawaAuditado from './auditado/Components/Ishikawa/Ishikawa';
 import DiagramaAuditado from './auditado/Components/DiagramaRe/Diagrama';
 import VistaReportesAuditado from './auditado/Components/ReporteF/VistaReportes';
-import Reporte from './auditado/Components/Reportes/Reporte.jsx';
 
 //Ishikawas Vacios
-import DiagramaIshVac from './ishikawa-vacio/components/DiagramaRe/Diagrama.jsx';
-import IshikawaVac from './ishikawa-vacio/components/Ishikawa/Ishikawa.jsx';
 import InicioIsh from './ishikawa-vacio/components/Home/inicio.jsx';
 
 //Objetivos 
@@ -139,14 +133,9 @@ export const UserContext = createContext({
               <Route path="/usuariosRegistrados" element={<ProtectedRoute allowedRoles={['administrador']}><UsuariosRegis /></ProtectedRoute>} /> 
               <Route path="/revicion/:_id" element={<ProtectedRoute allowedRoles={['administrador']}><Revicion /></ProtectedRoute>} />
               <Route path="/terminada/:_id" element={<ProtectedRoute allowedRoles={['administrador']}><Terminada /></ProtectedRoute>} />
-              <Route path="/finalizadas/:_id" element={<ProtectedRoute allowedRoles={['administrador']}><Finalizada/></ProtectedRoute>}/>
               <Route path="/ishikawa" element={<ProtectedRoute allowedRoles={['administrador']}><Ishikawa/></ProtectedRoute>} />
               <Route path="/ishikawa/:_id/:id/:nombre" element={<ProtectedRoute allowedRoles={['administrador']}><IshikawaRev/></ProtectedRoute>}/>
               <Route path="/vistafin" element={<ProtectedRoute allowedRoles={['administrador']}><VistaFinalizadas/></ProtectedRoute>}/>
-              <Route path="/auditcalendar" element={<ProtectedRoute allowedRoles={['administrador']}><Calendarioss/></ProtectedRoute>} />
-
-              <Route path="/calendario" element={<ProtectedRoute allowedRoles={['administrador']}><Calendarios /></ProtectedRoute>} />
-
               <Route path="/departamento" element={<ProtectedRoute allowedRoles={['administrador']}><Departaments /></ProtectedRoute>} />
               <Route path="/diagrama/:_id" element={<ProtectedRoute allowedRoles={['administrador']}><Diagrama /></ProtectedRoute>} />
               <Route path="/carga" element={<ProtectedRoute allowedRoles={['administrador']}><CargaMasiva /></ProtectedRoute>} />
@@ -171,12 +160,8 @@ export const UserContext = createContext({
               <Route path="/auditado/ishikawa/:_id/:id/:nombre" element={<ProtectedRoute><IshikawaAuditado/></ProtectedRoute>}/>
               <Route path="/auditado/diagrama" element={<ProtectedRoute><DiagramaAuditado/></ProtectedRoute>}/>
               <Route path="/auditado/vistarep" element={<ProtectedRoute><VistaReportesAuditado/></ProtectedRoute>}/>
-              <Route path="/reportes-auditado" element={<ProtectedRoute><Reporte/></ProtectedRoute>}/>
 
               {/*Ishikawas vacios*/}
-
-              <Route path="/ishikawavacio" element={<ProtectedRoute><DiagramaIshVac/></ProtectedRoute>}/>
-              <Route path="/diagramas" element={<ProtectedRoute><IshikawaVac/></ProtectedRoute>}/>
               <Route path="/inicio-ishvac" element={<ProtectedRoute><InicioIsh/></ProtectedRoute>}/>
 
                 {/*Objetivos*/}

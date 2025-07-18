@@ -29,7 +29,7 @@ app.use(express.urlencoded({ limit: '100mb', extended: true }));
 const mongo = require('./config/dbconfig');
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://auditapp-dqej.onrender.com', 'http://10.31.5.124:3000'],
+  origin: ['http://localhost:3000', 'https://auditorias.onrender.com', 'http://10.31.5.124:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, // Permitir cookies si son necesarias

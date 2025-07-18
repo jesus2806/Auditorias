@@ -2,13 +2,10 @@ const Usuarios = require('../models/usuarioSchema');
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const logger = require('../util/logger');
-console.log('logger:', logger);
-console.log("Logger methods:", Object.keys(logger));
-console.log('typeof logger.warn:', typeof logger.warn);
 require('dotenv').config();
 
 
-const loginAttempts = {}; // << nuevo
+const loginAttempts = {};
 
 const iniciarSesion = async (req, res) => {
   const { Correo, Contraseña } = req.body;
