@@ -1,0 +1,18 @@
+version: 2  # Versión del formato de configuración de Dependabot
+
+updates:
+  - package-ecosystem: "npm"  # Ecosistema de paquetes para front-end (Node.js con npm)
+    directory: "/front-end"    # Ruta relativa donde está el package.json del front-end
+    schedule:
+      interval: "weekly"       # Frecuencia con la que Dependabot buscará actualizaciones (diaria, semanal o mensual)
+    open-pull-requests-limit: 5  # Máximo número de PRs abiertas al mismo tiempo para este proyecto
+    commit-message:
+      prefix: "deps(front-end)"  # Prefijo para los mensajes de commit en las PRs
+
+  - package-ecosystem: "npm"  # Ecosistema de paquetes para back-end (Node.js con npm)
+    directory: "/server"       # Ruta relativa donde está el package.json del back-end
+    schedule:
+      interval: "weekly"       # Dependabot buscará actualizaciones semanalmente
+    open-pull-requests-limit: 5  # Limita la cantidad de PRs abiertas para no saturar
+    commit-message:
+      prefix: "deps(server)"   # Prefijo para los commits de back-end
