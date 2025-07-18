@@ -2,20 +2,45 @@ const Usuarios = require('../models/usuarioSchema');
 const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const logger = require('../util/logger');
+const validator = require('validator');
 require('dotenv').config();
-
 
 const loginAttempts = {};
 
+// Función para escapar HTML (protección contra XSS)
+function escapeHtml(text) {
+  return text.replace(/[&<>"']/g, function (m) {
+    return ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    })[m];
+  });
+}
+
 const iniciarSesion = async (req, res) => {
-  const { Correo, Contraseña } = req.body;
+  let { Correo, Contraseña } = req.body;
   const ip = req.ip;
+
+  // Validación básica de entrada
+  if (!Correo || !Contraseña) {
+    return res.status(400).json({ error: 'Correo y contraseña son obligatorios' });
+  }
+
+  if (!validator.isEmail(Correo)) {
+    return res.status(400).json({ error: 'Correo inválido' });
+  }
+
+  // Escape de HTML para evitar XSS
+  Correo = escapeHtml(Correo);
+  Contraseña = escapeHtml(Contraseña);
 
   try {
     const usuario = await Usuarios.findOne({ Correo });
 
     if (!usuario) {
-      // Intento fallido desde IP
       registrarIntentoFallido(ip, Correo);
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
@@ -52,12 +77,11 @@ const iniciarSesion = async (req, res) => {
     };
 
     logger.info(`Inicio de sesión exitoso: ${Correo}`);
-
     return res.status(200).json({ usuario: usuarioRes });
 
   } catch (error) {
     logger.error(`Error en iniciarSesion: ${error.message}`);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -74,10 +98,10 @@ function registrarIntentoFallido(ip, correoIntentado) {
 
   loginAttempts[ip].lastAttempt = now;
 
-  logger.warn(`Intento de inicio de sesión fallido  usando correo ${correoIntentado}. Intentos recientes: ${loginAttempts[ip].count}`);
+  logger.warn(`Intento de inicio de sesión fallido usando correo ${correoIntentado}. Intentos recientes: ${loginAttempts[ip].count}`);
 
   if (loginAttempts[ip].count >= 3) {
-    logger.warn(`⚠️ Posible actividad sospechosa detectada. Múltiples intentos fallidos en menos de 1 minuto.`);
+    logger.warn(`Posible actividad sospechosa detectada. Múltiples intentos fallidos en menos de 1 minuto.`);
   }
 }
 
