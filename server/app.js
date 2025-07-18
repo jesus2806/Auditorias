@@ -5,6 +5,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const createError = require('http-errors');
 const dotenv = require('dotenv');
+const helmet = require('helmet');
 
 const usuariosRouter = require('./routes/usuarioRoutes');
 const loginRoutes = require('./routes/loginRoutes');
@@ -22,9 +23,12 @@ dotenv.config();
 
 const app = express();
 
+// Seguridad
+app.disable('x-powered-by');  // Oculta que usas Express
+app.use(helmet());            // Protege con cabeceras HTTP seguras
+
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
-
 
 const mongo = require('./config/dbconfig');
 
@@ -33,7 +37,7 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, // Permitir cookies si son necesarias
-}
+};
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -48,16 +52,16 @@ app.use((req, res, next) => {
 });
 
 // Configura las rutas
-app.use('/', loginRoutes); 
+app.use('/', loginRoutes);
 app.use('/auth', authRoutes);
 app.use('/usuarios', usuariosRouter);
-app.use('/datos',              authenticateJWT, datosRoutes);
-app.use('/programas',          authenticateJWT, programasRoutes);
-app.use('/areas',              authenticateJWT, areasRoutes);
-app.use('/ishikawa',           authenticateJWT, ishikawa);
-app.use('/evaluacion',         authenticateJWT, evaluacionRoutes);
-app.use('/programas-anuales',  authenticateJWT, programarRoutes);
-app.use('/api/objetivos',      authenticateJWT, objetivosRoutes);
+app.use('/datos', authenticateJWT, datosRoutes);
+app.use('/programas', authenticateJWT, programasRoutes);
+app.use('/areas', authenticateJWT, areasRoutes);
+app.use('/ishikawa', authenticateJWT, ishikawa);
+app.use('/evaluacion', authenticateJWT, evaluacionRoutes);
+app.use('/programas-anuales', authenticateJWT, programarRoutes);
+app.use('/api/objetivos', authenticateJWT, objetivosRoutes);
 
 // Manejar la ruta raíz
 app.get('/', (req, res) => {
